@@ -1,3 +1,11 @@
+# Ignore some big data files
+GCM-OUTPUT/*
+PLANETS/*
+Spectra/OUT/*
+Spectra/DATA/*
+Spectra/SCATTERING_DATA/*
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
