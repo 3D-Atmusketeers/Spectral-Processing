@@ -27,7 +27,7 @@ Defines input values and files for 3-D emission spectra
 #define NLAMBDA 2598                       /* Number of wavelength points in grid [4616/2598]   */
 
 // This is the Npressure for low res
-#define NPRESSURE 17    /* Number of pressure points in grid   [13/17]   */
+#define NPRESSURE 13    /* Number of pressure points in grid   [13/17]   */
 
 #define W0_VAL 0.0
 #define G0_VAL 0.0
@@ -91,14 +91,14 @@ Defines input values and files for 3-D emission spectra
 #define QE_Al2O3 0.12
 
 /* Opacities for spectra */
-#define CHEM_FILE   "DATA/eos_solar_doppler.dat"
-#define CH4_FILE    "DATA/opacCH4_hires.dat"
-#define CO2_FILE    "DATA/opacCO2_hires.dat"
-#define CO_FILE     "DATA/opacCO_hires.dat"
-#define H2O_FILE    "DATA/opacH2O_hires.dat"
-#define NH3_FILE    "DATA/opacNH3_hires.dat"
-#define O2_FILE     "DATA/opacO2_hires.dat"
-#define O3_FILE     "DATA/opacO3_hires.dat"
+#define CHEM_FILE   "DATA/eos_solar_doppler_2016_cond.dat"
+#define CH4_FILE    "DATA/opacCH4.dat"
+#define CO2_FILE    "DATA/opacCO2.dat"
+#define CO_FILE     "DATA/opacCO.dat"
+#define H2O_FILE    "DATA/opacH2O.dat"
+#define NH3_FILE    "DATA/opacNH3.dat"
+#define O2_FILE     "DATA/opacO2.dat"
+#define O3_FILE     "DATA/opacO3.dat"
 
 #endif /* !__INPUT_H__ */
 

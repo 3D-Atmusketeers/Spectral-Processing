@@ -113,340 +113,346 @@ int RT_Emit_3D(double PHASE)
     3319248.37, 4375621.54, 4375621.54, 5768192.58, 5768192.58, 7603958.73, 7803958.73, \
     8003958.73};
 
-    int x=0, y=0, num_temp_points=0, num_pressure_points=0;
+    double wavelengths_in_microns[50] = {0.3, 0.35, 0.42, 0.49, 0.57, 0.68, 0.79, 0.93, 1.1, 1.29, 1.52, 1.79, 2.1, \
+                                         2.47, 2.91, 3.42, 4.02, 4.73, 5.57, 6.55, 7.7, 9.05, 10.65, 12.53, 14.73, \
+                                         17.33, 20.38, 23.97, 28.19, 33.16, 39.0, 45.87, 53.95, 63.45, 74.63, \
+                                         87.78, 103.24, 121.43, 142.82, 167.97, 197.56, 232.37, 273.3, 321.44, \
+                                         378.06, 444.66, 522.99, 615.12, 723.47, 850.92};
+
+    int x=0, y=0, num_wavelength_points=0, num_pressure_points=0;
     double input_val=0;
-    num_temp_points = 50;
+    num_wavelength_points = 50;
     num_pressure_points = 50;
 
-    const char KCl_ir_2310_gg_file[]    = "SCATTERING_DATA/KCl_ir_2310_gg.txt";
-    const char KCl_ir_2310_pi0_file[] = "SCATTERING_DATA/KCl_ir_2310_pi0.txt";
-    const char KCl_ir_2310_qext_file[] = "SCATTERING_DATA/KCl_ir_2310_qext.txt";
+    const char KCl_wav_gg_file[]    = "SCATTERING_DATA/KCl_wav_gg.txt";
+    const char KCl_wav_pi0_file[] = "SCATTERING_DATA/KCl_wav_pi0.txt";
+    const char KCl_wav_qext_file[] = "SCATTERING_DATA/KCl_wav_qext.txt";
 
-    const char ZnS_ir_2310_gg_file[]    = "SCATTERING_DATA/ZnS_ir_2310_gg.txt";
-    const char ZnS_ir_2310_pi0_file[] = "SCATTERING_DATA/ZnS_ir_2310_pi0.txt";
-    const char ZnS_ir_2310_qext_file[] = "SCATTERING_DATA/ZnS_ir_2310_qext.txt";
+    const char ZnS_wav_gg_file[]    = "SCATTERING_DATA/ZnS_wav_gg.txt";
+    const char ZnS_wav_pi0_file[] = "SCATTERING_DATA/ZnS_wav_pi0.txt";
+    const char ZnS_wav_qext_file[] = "SCATTERING_DATA/ZnS_wav_qext.txt";
 
-    const char Na2S_ir_2310_gg_file[]    = "SCATTERING_DATA/Na2S_ir_2310_gg.txt";
-    const char Na2S_ir_2310_pi0_file[] = "SCATTERING_DATA/Na2S_ir_2310_pi0.txt";
-    const char Na2S_ir_2310_qext_file[] = "SCATTERING_DATA/Na2S_ir_2310_qext.txt";
+    const char Na2S_wav_gg_file[]    = "SCATTERING_DATA/Na2S_wav_gg.txt";
+    const char Na2S_wav_pi0_file[] = "SCATTERING_DATA/Na2S_wav_pi0.txt";
+    const char Na2S_wav_qext_file[] = "SCATTERING_DATA/Na2S_wav_qext.txt";
 
-    const char MnS_ir_2310_gg_file[]    = "SCATTERING_DATA/MnS_ir_2310_gg.txt";
-    const char MnS_ir_2310_pi0_file[] = "SCATTERING_DATA/MnS_ir_2310_pi0.txt";
-    const char MnS_ir_2310_qext_file[] = "SCATTERING_DATA/MnS_ir_2310_qext.txt";
+    const char MnS_wav_gg_file[]    = "SCATTERING_DATA/MnS_wav_gg.txt";
+    const char MnS_wav_pi0_file[] = "SCATTERING_DATA/MnS_wav_pi0.txt";
+    const char MnS_wav_qext_file[] = "SCATTERING_DATA/MnS_wav_qext.txt";
 
-    const char Cr_ir_2310_gg_file[]    = "SCATTERING_DATA/Cr_ir_2310_gg.txt";
-    const char Cr_ir_2310_pi0_file[] = "SCATTERING_DATA/Cr_ir_2310_pi0.txt";
-    const char Cr_ir_2310_qext_file[] = "SCATTERING_DATA/Cr_ir_2310_qext.txt";
+    const char Cr_wav_gg_file[]    = "SCATTERING_DATA/Cr_wav_gg.txt";
+    const char Cr_wav_pi0_file[] = "SCATTERING_DATA/Cr_wav_pi0.txt";
+    const char Cr_wav_qext_file[] = "SCATTERING_DATA/Cr_wav_qext.txt";
 
-    const char SiO2_ir_2310_gg_file[]    = "SCATTERING_DATA/SiO2_ir_2310_gg.txt";
-    const char SiO2_ir_2310_pi0_file[] = "SCATTERING_DATA/SiO2_ir_2310_pi0.txt";
-    const char SiO2_ir_2310_qext_file[] = "SCATTERING_DATA/SiO2_ir_2310_qext.txt";
+    const char SiO2_wav_gg_file[]    = "SCATTERING_DATA/SiO2_wav_gg.txt";
+    const char SiO2_wav_pi0_file[] = "SCATTERING_DATA/SiO2_wav_pi0.txt";
+    const char SiO2_wav_qext_file[] = "SCATTERING_DATA/SiO2_wav_qext.txt";
 
-    const char Mg2SiO4_ir_2310_gg_file[]    = "SCATTERING_DATA/Mg2SiO4_ir_2310_gg.txt";
-    const char Mg2SiO4_ir_2310_pi0_file[] = "SCATTERING_DATA/Mg2SiO4_ir_2310_pi0.txt";
-    const char Mg2SiO4_ir_2310_qext_file[] = "SCATTERING_DATA/Mg2SiO4_ir_2310_qext.txt";
+    const char Mg2SiO4_wav_gg_file[]    = "SCATTERING_DATA/Mg2SiO4_wav_gg.txt";
+    const char Mg2SiO4_wav_pi0_file[] = "SCATTERING_DATA/Mg2SiO4_wav_pi0.txt";
+    const char Mg2SiO4_wav_qext_file[] = "SCATTERING_DATA/Mg2SiO4_wav_qext.txt";
 
-    const char VO_ir_2310_gg_file[]    = "SCATTERING_DATA/VO_ir_2310_gg.txt";
-    const char VO_ir_2310_pi0_file[] = "SCATTERING_DATA/VO_ir_2310_pi0.txt";
-    const char VO_ir_2310_qext_file[] = "SCATTERING_DATA/VO_ir_2310_qext.txt";
+    const char VO_wav_gg_file[]    = "SCATTERING_DATA/VO_wav_gg.txt";
+    const char VO_wav_pi0_file[] = "SCATTERING_DATA/VO_wav_pi0.txt";
+    const char VO_wav_qext_file[] = "SCATTERING_DATA/VO_wav_qext.txt";
 
-    const char Ni_ir_2310_gg_file[]    = "SCATTERING_DATA/Ni_ir_2310_gg.txt";
-    const char Ni_ir_2310_pi0_file[] = "SCATTERING_DATA/Ni_ir_2310_pi0.txt";
-    const char Ni_ir_2310_qext_file[] = "SCATTERING_DATA/Ni_ir_2310_qext.txt";
+    const char Ni_wav_gg_file[]    = "SCATTERING_DATA/Ni_wav_gg.txt";
+    const char Ni_wav_pi0_file[] = "SCATTERING_DATA/Ni_wav_pi0.txt";
+    const char Ni_wav_qext_file[] = "SCATTERING_DATA/Ni_wav_qext.txt";
 
-    const char Fe_ir_2310_gg_file[]    = "SCATTERING_DATA/Fe_ir_2310_gg.txt";
-    const char Fe_ir_2310_pi0_file[] = "SCATTERING_DATA/Fe_ir_2310_pi0.txt";
-    const char Fe_ir_2310_qext_file[] = "SCATTERING_DATA/Fe_ir_2310_qext.txt";
+    const char Fe_wav_gg_file[]    = "SCATTERING_DATA/Fe_wav_gg.txt";
+    const char Fe_wav_pi0_file[] = "SCATTERING_DATA/Fe_wav_pi0.txt";
+    const char Fe_wav_qext_file[] = "SCATTERING_DATA/Fe_wav_qext.txt";
 
-    const char CaSiO4_ir_2310_gg_file[]    = "SCATTERING_DATA/CaSiO4_ir_2310_gg.txt";
-    const char CaSiO4_ir_2310_pi0_file[] = "SCATTERING_DATA/CaSiO4_ir_2310_pi0.txt";
-    const char CaSiO4_ir_2310_qext_file[] = "SCATTERING_DATA/CaSiO4_ir_2310_qext.txt";
+    const char CaSiO4_wav_gg_file[]    = "SCATTERING_DATA/CaSiO4_wav_gg.txt";
+    const char CaSiO4_wav_pi0_file[] = "SCATTERING_DATA/CaSiO4_wav_pi0.txt";
+    const char CaSiO4_wav_qext_file[] = "SCATTERING_DATA/CaSiO4_wav_qext.txt";
 
-    const char CaTiO3_ir_2310_gg_file[]    = "SCATTERING_DATA/CaTiO3_ir_2310_gg.txt";
-    const char CaTiO3_ir_2310_pi0_file[] = "SCATTERING_DATA/CaTiO3_ir_2310_pi0.txt";
-    const char CaTiO3_ir_2310_qext_file[] = "SCATTERING_DATA/CaTiO3_ir_2310_qext.txt";
+    const char CaTiO3_wav_gg_file[]    = "SCATTERING_DATA/CaTiO3_wav_gg.txt";
+    const char CaTiO3_wav_pi0_file[] = "SCATTERING_DATA/CaTiO3_wav_pi0.txt";
+    const char CaTiO3_wav_qext_file[] = "SCATTERING_DATA/CaTiO3_wav_qext.txt";
 
-    const char Al2O3_ir_2310_gg_file[]    = "SCATTERING_DATA/Al2O3_ir_2310_gg.txt";
-    const char Al2O3_ir_2310_pi0_file[] = "SCATTERING_DATA/Al2O3_ir_2310_pi0.txt";
-    const char Al2O3_ir_2310_qext_file[] = "SCATTERING_DATA/Al2O3_ir_2310_qext.txt";
+    const char Al2O3_wav_gg_file[]    = "SCATTERING_DATA/Al2O3_wav_gg.txt";
+    const char Al2O3_wav_pi0_file[] = "SCATTERING_DATA/Al2O3_wav_pi0.txt";
+    const char Al2O3_wav_qext_file[] = "SCATTERING_DATA/Al2O3_wav_qext.txt";
 
-    FILE *input_KCl_ir_2310_gg_file;
-    FILE *input_KCl_ir_2310_pi0_file;
-    FILE *input_KCl_ir_2310_qext_file;
+    FILE *input_KCl_wav_gg_file;
+    FILE *input_KCl_wav_pi0_file;
+    FILE *input_KCl_wav_qext_file;
 
-    FILE *input_ZnS_ir_2310_gg_file;
-    FILE *input_ZnS_ir_2310_pi0_file;
-    FILE *input_ZnS_ir_2310_qext_file;
+    FILE *input_ZnS_wav_gg_file;
+    FILE *input_ZnS_wav_pi0_file;
+    FILE *input_ZnS_wav_qext_file;
 
-    FILE *input_Na2S_ir_2310_gg_file;
-    FILE *input_Na2S_ir_2310_pi0_file;
-    FILE *input_Na2S_ir_2310_qext_file;
+    FILE *input_Na2S_wav_gg_file;
+    FILE *input_Na2S_wav_pi0_file;
+    FILE *input_Na2S_wav_qext_file;
 
-    FILE *input_MnS_ir_2310_gg_file;
-    FILE *input_MnS_ir_2310_pi0_file;
-    FILE *input_MnS_ir_2310_qext_file;
+    FILE *input_MnS_wav_gg_file;
+    FILE *input_MnS_wav_pi0_file;
+    FILE *input_MnS_wav_qext_file;
 
-    FILE *input_Cr_ir_2310_gg_file;
-    FILE *input_Cr_ir_2310_pi0_file;
-    FILE *input_Cr_ir_2310_qext_file;
+    FILE *input_Cr_wav_gg_file;
+    FILE *input_Cr_wav_pi0_file;
+    FILE *input_Cr_wav_qext_file;
 
-    FILE *input_SiO2_ir_2310_gg_file;
-    FILE *input_SiO2_ir_2310_pi0_file;
-    FILE *input_SiO2_ir_2310_qext_file;
+    FILE *input_SiO2_wav_gg_file;
+    FILE *input_SiO2_wav_pi0_file;
+    FILE *input_SiO2_wav_qext_file;
 
-    FILE *input_Mg2SiO4_ir_2310_gg_file;
-    FILE *input_Mg2SiO4_ir_2310_pi0_file;
-    FILE *input_Mg2SiO4_ir_2310_qext_file;
+    FILE *input_Mg2SiO4_wav_gg_file;
+    FILE *input_Mg2SiO4_wav_pi0_file;
+    FILE *input_Mg2SiO4_wav_qext_file;
 
-    FILE *input_VO_ir_2310_gg_file;
-    FILE *input_VO_ir_2310_pi0_file;
-    FILE *input_VO_ir_2310_qext_file;
+    FILE *input_VO_wav_gg_file;
+    FILE *input_VO_wav_pi0_file;
+    FILE *input_VO_wav_qext_file;
 
-    FILE *input_Ni_ir_2310_gg_file;
-    FILE *input_Ni_ir_2310_pi0_file;
-    FILE *input_Ni_ir_2310_qext_file;
+    FILE *input_Ni_wav_gg_file;
+    FILE *input_Ni_wav_pi0_file;
+    FILE *input_Ni_wav_qext_file;
 
-    FILE *input_Fe_ir_2310_gg_file;
-    FILE *input_Fe_ir_2310_pi0_file;
-    FILE *input_Fe_ir_2310_qext_file;
+    FILE *input_Fe_wav_gg_file;
+    FILE *input_Fe_wav_pi0_file;
+    FILE *input_Fe_wav_qext_file;
 
-    FILE *input_CaSiO4_ir_2310_gg_file;
-    FILE *input_CaSiO4_ir_2310_pi0_file;
-    FILE *input_CaSiO4_ir_2310_qext_file;
+    FILE *input_CaSiO4_wav_gg_file;
+    FILE *input_CaSiO4_wav_pi0_file;
+    FILE *input_CaSiO4_wav_qext_file;
 
-    FILE *input_CaTiO3_ir_2310_gg_file;
-    FILE *input_CaTiO3_ir_2310_pi0_file;
-    FILE *input_CaTiO3_ir_2310_qext_file;
+    FILE *input_CaTiO3_wav_gg_file;
+    FILE *input_CaTiO3_wav_pi0_file;
+    FILE *input_CaTiO3_wav_qext_file;
 
-    FILE *input_Al2O3_ir_2310_gg_file;
-    FILE *input_Al2O3_ir_2310_pi0_file;
-    FILE *input_Al2O3_ir_2310_qext_file;
+    FILE *input_Al2O3_wav_gg_file;
+    FILE *input_Al2O3_wav_pi0_file;
+    FILE *input_Al2O3_wav_qext_file;
 
-    input_KCl_ir_2310_gg_file = fopen(KCl_ir_2310_gg_file, "r");
-    input_KCl_ir_2310_pi0_file = fopen(KCl_ir_2310_pi0_file, "r");
-    input_KCl_ir_2310_qext_file = fopen(KCl_ir_2310_qext_file, "r");
+    input_KCl_wav_gg_file = fopen(KCl_wav_gg_file, "r");
+    input_KCl_wav_pi0_file = fopen(KCl_wav_pi0_file, "r");
+    input_KCl_wav_qext_file = fopen(KCl_wav_qext_file, "r");
 
-    input_ZnS_ir_2310_gg_file = fopen(ZnS_ir_2310_gg_file, "r");
-    input_ZnS_ir_2310_pi0_file = fopen(ZnS_ir_2310_pi0_file, "r");
-    input_ZnS_ir_2310_qext_file = fopen(ZnS_ir_2310_qext_file, "r");
+    input_ZnS_wav_gg_file = fopen(ZnS_wav_gg_file, "r");
+    input_ZnS_wav_pi0_file = fopen(ZnS_wav_pi0_file, "r");
+    input_ZnS_wav_qext_file = fopen(ZnS_wav_qext_file, "r");
 
-    input_Na2S_ir_2310_gg_file = fopen(Na2S_ir_2310_gg_file, "r");
-    input_Na2S_ir_2310_pi0_file = fopen(Na2S_ir_2310_pi0_file, "r");
-    input_Na2S_ir_2310_qext_file = fopen(Na2S_ir_2310_qext_file, "r");
+    input_Na2S_wav_gg_file = fopen(Na2S_wav_gg_file, "r");
+    input_Na2S_wav_pi0_file = fopen(Na2S_wav_pi0_file, "r");
+    input_Na2S_wav_qext_file = fopen(Na2S_wav_qext_file, "r");
 
-    input_MnS_ir_2310_gg_file = fopen(MnS_ir_2310_gg_file, "r");
-    input_MnS_ir_2310_pi0_file = fopen(MnS_ir_2310_pi0_file, "r");
-    input_MnS_ir_2310_qext_file = fopen(MnS_ir_2310_qext_file, "r");
+    input_MnS_wav_gg_file = fopen(MnS_wav_gg_file, "r");
+    input_MnS_wav_pi0_file = fopen(MnS_wav_pi0_file, "r");
+    input_MnS_wav_qext_file = fopen(MnS_wav_qext_file, "r");
 
-    input_Cr_ir_2310_gg_file = fopen(Cr_ir_2310_gg_file, "r");
-    input_Cr_ir_2310_pi0_file = fopen(Cr_ir_2310_pi0_file, "r");
-    input_Cr_ir_2310_qext_file = fopen(Cr_ir_2310_qext_file, "r");
+    input_Cr_wav_gg_file = fopen(Cr_wav_gg_file, "r");
+    input_Cr_wav_pi0_file = fopen(Cr_wav_pi0_file, "r");
+    input_Cr_wav_qext_file = fopen(Cr_wav_qext_file, "r");
 
-    input_SiO2_ir_2310_gg_file = fopen(SiO2_ir_2310_gg_file, "r");
-    input_SiO2_ir_2310_pi0_file = fopen(SiO2_ir_2310_pi0_file, "r");
-    input_SiO2_ir_2310_qext_file = fopen(SiO2_ir_2310_qext_file, "r");
+    input_SiO2_wav_gg_file = fopen(SiO2_wav_gg_file, "r");
+    input_SiO2_wav_pi0_file = fopen(SiO2_wav_pi0_file, "r");
+    input_SiO2_wav_qext_file = fopen(SiO2_wav_qext_file, "r");
 
-    input_Mg2SiO4_ir_2310_gg_file = fopen(Mg2SiO4_ir_2310_gg_file, "r");
-    input_Mg2SiO4_ir_2310_pi0_file = fopen(Mg2SiO4_ir_2310_pi0_file, "r");
-    input_Mg2SiO4_ir_2310_qext_file = fopen(Mg2SiO4_ir_2310_qext_file, "r");
+    input_Mg2SiO4_wav_gg_file = fopen(Mg2SiO4_wav_gg_file, "r");
+    input_Mg2SiO4_wav_pi0_file = fopen(Mg2SiO4_wav_pi0_file, "r");
+    input_Mg2SiO4_wav_qext_file = fopen(Mg2SiO4_wav_qext_file, "r");
 
-    input_VO_ir_2310_gg_file = fopen(VO_ir_2310_gg_file, "r");
-    input_VO_ir_2310_pi0_file = fopen(VO_ir_2310_pi0_file, "r");
-    input_VO_ir_2310_qext_file = fopen(VO_ir_2310_qext_file, "r");
+    input_VO_wav_gg_file = fopen(VO_wav_gg_file, "r");
+    input_VO_wav_pi0_file = fopen(VO_wav_pi0_file, "r");
+    input_VO_wav_qext_file = fopen(VO_wav_qext_file, "r");
 
-    input_Ni_ir_2310_gg_file = fopen(Ni_ir_2310_gg_file, "r");
-    input_Ni_ir_2310_pi0_file = fopen(Ni_ir_2310_pi0_file, "r");
-    input_Ni_ir_2310_qext_file = fopen(Ni_ir_2310_qext_file, "r");
+    input_Ni_wav_gg_file = fopen(Ni_wav_gg_file, "r");
+    input_Ni_wav_pi0_file = fopen(Ni_wav_pi0_file, "r");
+    input_Ni_wav_qext_file = fopen(Ni_wav_qext_file, "r");
 
-    input_Fe_ir_2310_gg_file = fopen(Fe_ir_2310_gg_file, "r");
-    input_Fe_ir_2310_pi0_file = fopen(Fe_ir_2310_pi0_file, "r");
-    input_Fe_ir_2310_qext_file = fopen(Fe_ir_2310_qext_file, "r");
+    input_Fe_wav_gg_file = fopen(Fe_wav_gg_file, "r");
+    input_Fe_wav_pi0_file = fopen(Fe_wav_pi0_file, "r");
+    input_Fe_wav_qext_file = fopen(Fe_wav_qext_file, "r");
 
-    input_CaSiO4_ir_2310_gg_file = fopen(CaSiO4_ir_2310_gg_file, "r");
-    input_CaSiO4_ir_2310_pi0_file = fopen(CaSiO4_ir_2310_pi0_file, "r");
-    input_CaSiO4_ir_2310_qext_file = fopen(CaSiO4_ir_2310_qext_file, "r");
+    input_CaSiO4_wav_gg_file = fopen(CaSiO4_wav_gg_file, "r");
+    input_CaSiO4_wav_pi0_file = fopen(CaSiO4_wav_pi0_file, "r");
+    input_CaSiO4_wav_qext_file = fopen(CaSiO4_wav_qext_file, "r");
 
-    input_CaTiO3_ir_2310_gg_file = fopen(CaTiO3_ir_2310_gg_file, "r");
-    input_CaTiO3_ir_2310_pi0_file = fopen(CaTiO3_ir_2310_pi0_file, "r");
-    input_CaTiO3_ir_2310_qext_file = fopen(CaTiO3_ir_2310_qext_file, "r");
+    input_CaTiO3_wav_gg_file = fopen(CaTiO3_wav_gg_file, "r");
+    input_CaTiO3_wav_pi0_file = fopen(CaTiO3_wav_pi0_file, "r");
+    input_CaTiO3_wav_qext_file = fopen(CaTiO3_wav_qext_file, "r");
 
-    input_Al2O3_ir_2310_gg_file = fopen(Al2O3_ir_2310_gg_file, "r");
-    input_Al2O3_ir_2310_pi0_file = fopen(Al2O3_ir_2310_pi0_file, "r");
-    input_Al2O3_ir_2310_qext_file = fopen(Al2O3_ir_2310_qext_file, "r");
+    input_Al2O3_wav_gg_file = fopen(Al2O3_wav_gg_file, "r");
+    input_Al2O3_wav_pi0_file = fopen(Al2O3_wav_pi0_file, "r");
+    input_Al2O3_wav_qext_file = fopen(Al2O3_wav_qext_file, "r");
 
-    double KCl_ir_2310_gg[num_pressure_points][num_temp_points];
-    double KCl_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double KCl_ir_2310_qext[num_pressure_points][num_temp_points];
+    double KCl_wav_gg[num_pressure_points][num_wavelength_points];
+    double KCl_wav_pi0[num_pressure_points][num_wavelength_points];
+    double KCl_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double ZnS_ir_2310_gg[num_pressure_points][num_temp_points];
-    double ZnS_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double ZnS_ir_2310_qext[num_pressure_points][num_temp_points];
+    double ZnS_wav_gg[num_pressure_points][num_wavelength_points];
+    double ZnS_wav_pi0[num_pressure_points][num_wavelength_points];
+    double ZnS_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double Na2S_ir_2310_gg[num_pressure_points][num_temp_points];
-    double Na2S_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double Na2S_ir_2310_qext[num_pressure_points][num_temp_points];
+    double Na2S_wav_gg[num_pressure_points][num_wavelength_points];
+    double Na2S_wav_pi0[num_pressure_points][num_wavelength_points];
+    double Na2S_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double MnS_ir_2310_gg[num_pressure_points][num_temp_points];
-    double MnS_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double MnS_ir_2310_qext[num_pressure_points][num_temp_points];
+    double MnS_wav_gg[num_pressure_points][num_wavelength_points];
+    double MnS_wav_pi0[num_pressure_points][num_wavelength_points];
+    double MnS_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double Cr_ir_2310_gg[num_pressure_points][num_temp_points];
-    double Cr_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double Cr_ir_2310_qext[num_pressure_points][num_temp_points];
+    double Cr_wav_gg[num_pressure_points][num_wavelength_points];
+    double Cr_wav_pi0[num_pressure_points][num_wavelength_points];
+    double Cr_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double SiO2_ir_2310_gg[num_pressure_points][num_temp_points];
-    double SiO2_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double SiO2_ir_2310_qext[num_pressure_points][num_temp_points];
+    double SiO2_wav_gg[num_pressure_points][num_wavelength_points];
+    double SiO2_wav_pi0[num_pressure_points][num_wavelength_points];
+    double SiO2_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double Mg2SiO4_ir_2310_gg[num_pressure_points][num_temp_points];
-    double Mg2SiO4_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double Mg2SiO4_ir_2310_qext[num_pressure_points][num_temp_points];
+    double Mg2SiO4_wav_gg[num_pressure_points][num_wavelength_points];
+    double Mg2SiO4_wav_pi0[num_pressure_points][num_wavelength_points];
+    double Mg2SiO4_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double VO_ir_2310_gg[num_pressure_points][num_temp_points];
-    double VO_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double VO_ir_2310_qext[num_pressure_points][num_temp_points];
+    double VO_wav_gg[num_pressure_points][num_wavelength_points];
+    double VO_wav_pi0[num_pressure_points][num_wavelength_points];
+    double VO_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double Ni_ir_2310_gg[num_pressure_points][num_temp_points];
-    double Ni_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double Ni_ir_2310_qext[num_pressure_points][num_temp_points];
+    double Ni_wav_gg[num_pressure_points][num_wavelength_points];
+    double Ni_wav_pi0[num_pressure_points][num_wavelength_points];
+    double Ni_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double Fe_ir_2310_gg[num_pressure_points][num_temp_points];
-    double Fe_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double Fe_ir_2310_qext[num_pressure_points][num_temp_points];
+    double Fe_wav_gg[num_pressure_points][num_wavelength_points];
+    double Fe_wav_pi0[num_pressure_points][num_wavelength_points];
+    double Fe_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double CaSiO4_ir_2310_gg[num_pressure_points][num_temp_points];
-    double CaSiO4_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double CaSiO4_ir_2310_qext[num_pressure_points][num_temp_points];
+    double CaSiO4_wav_gg[num_pressure_points][num_wavelength_points];
+    double CaSiO4_wav_pi0[num_pressure_points][num_wavelength_points];
+    double CaSiO4_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double CaTiO3_ir_2310_gg[num_pressure_points][num_temp_points];
-    double CaTiO3_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double CaTiO3_ir_2310_qext[num_pressure_points][num_temp_points];
+    double CaTiO3_wav_gg[num_pressure_points][num_wavelength_points];
+    double CaTiO3_wav_pi0[num_pressure_points][num_wavelength_points];
+    double CaTiO3_wav_qext[num_pressure_points][num_wavelength_points];
 
-    double Al2O3_ir_2310_gg[num_pressure_points][num_temp_points];
-    double Al2O3_ir_2310_pi0[num_pressure_points][num_temp_points];
-    double Al2O3_ir_2310_qext[num_pressure_points][num_temp_points];
+    double Al2O3_wav_gg[num_pressure_points][num_wavelength_points];
+    double Al2O3_wav_pi0[num_pressure_points][num_wavelength_points];
+    double Al2O3_wav_qext[num_pressure_points][num_wavelength_points];
 
 
     for(x = 0; x < num_pressure_points; x++)
     {
-        for(y = 0; y < num_temp_points; y++)
+        for(y = 0; y < num_wavelength_points; y++)
         {
-            fscanf(input_KCl_ir_2310_gg_file, "%le", &input_val);
-            KCl_ir_2310_gg[x][y]=input_val;
-            fscanf(input_KCl_ir_2310_pi0_file, "%le", &input_val);
-            KCl_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_KCl_ir_2310_qext_file, "%le", &input_val);
-            KCl_ir_2310_qext[x][y]=input_val;
+            fscanf(input_KCl_wav_gg_file, "%le", &input_val);
+            KCl_wav_gg[x][y]=input_val;
+            fscanf(input_KCl_wav_pi0_file, "%le", &input_val);
+            KCl_wav_pi0[x][y]=input_val;
+            fscanf(input_KCl_wav_qext_file, "%le", &input_val);
+            KCl_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_ZnS_ir_2310_gg_file, "%le", &input_val);
-            ZnS_ir_2310_gg[x][y]=input_val;
-            fscanf(input_ZnS_ir_2310_pi0_file, "%le", &input_val);
-            ZnS_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_ZnS_ir_2310_qext_file, "%le", &input_val);
-            ZnS_ir_2310_qext[x][y]=input_val;
+            fscanf(input_ZnS_wav_gg_file, "%le", &input_val);
+            ZnS_wav_gg[x][y]=input_val;
+            fscanf(input_ZnS_wav_pi0_file, "%le", &input_val);
+            ZnS_wav_pi0[x][y]=input_val;
+            fscanf(input_ZnS_wav_qext_file, "%le", &input_val);
+            ZnS_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_Na2S_ir_2310_gg_file, "%le", &input_val);
-            Na2S_ir_2310_gg[x][y]=input_val;
-            fscanf(input_Na2S_ir_2310_pi0_file, "%le", &input_val);
-            Na2S_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_Na2S_ir_2310_qext_file, "%le", &input_val);
-            Na2S_ir_2310_qext[x][y]=input_val;
+            fscanf(input_Na2S_wav_gg_file, "%le", &input_val);
+            Na2S_wav_gg[x][y]=input_val;
+            fscanf(input_Na2S_wav_pi0_file, "%le", &input_val);
+            Na2S_wav_pi0[x][y]=input_val;
+            fscanf(input_Na2S_wav_qext_file, "%le", &input_val);
+            Na2S_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_MnS_ir_2310_gg_file, "%le", &input_val);
-            MnS_ir_2310_gg[x][y]=input_val;
-            fscanf(input_MnS_ir_2310_pi0_file, "%le", &input_val);
-            MnS_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_MnS_ir_2310_qext_file, "%le", &input_val);
-            MnS_ir_2310_qext[x][y]=input_val;
+            fscanf(input_MnS_wav_gg_file, "%le", &input_val);
+            MnS_wav_gg[x][y]=input_val;
+            fscanf(input_MnS_wav_pi0_file, "%le", &input_val);
+            MnS_wav_pi0[x][y]=input_val;
+            fscanf(input_MnS_wav_qext_file, "%le", &input_val);
+            MnS_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_Cr_ir_2310_gg_file, "%le", &input_val);
-            Cr_ir_2310_gg[x][y]=input_val;
-            fscanf(input_Cr_ir_2310_pi0_file, "%le", &input_val);
-            Cr_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_Cr_ir_2310_qext_file, "%le", &input_val);
-            Cr_ir_2310_qext[x][y]=input_val;
+            fscanf(input_Cr_wav_gg_file, "%le", &input_val);
+            Cr_wav_gg[x][y]=input_val;
+            fscanf(input_Cr_wav_pi0_file, "%le", &input_val);
+            Cr_wav_pi0[x][y]=input_val;
+            fscanf(input_Cr_wav_qext_file, "%le", &input_val);
+            Cr_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_SiO2_ir_2310_gg_file, "%le", &input_val);
-            SiO2_ir_2310_gg[x][y]=input_val;
-            fscanf(input_SiO2_ir_2310_pi0_file, "%le", &input_val);
-            SiO2_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_SiO2_ir_2310_qext_file, "%le", &input_val);
-            SiO2_ir_2310_qext[x][y]=input_val;
+            fscanf(input_SiO2_wav_gg_file, "%le", &input_val);
+            SiO2_wav_gg[x][y]=input_val;
+            fscanf(input_SiO2_wav_pi0_file, "%le", &input_val);
+            SiO2_wav_pi0[x][y]=input_val;
+            fscanf(input_SiO2_wav_qext_file, "%le", &input_val);
+            SiO2_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_Mg2SiO4_ir_2310_pi0_file, "%le", &input_val);
-            Mg2SiO4_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_Mg2SiO4_ir_2310_pi0_file, "%le", &input_val);
-            Mg2SiO4_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_Mg2SiO4_ir_2310_qext_file, "%le", &input_val);
-            Mg2SiO4_ir_2310_qext[x][y]=input_val;
+            fscanf(input_Mg2SiO4_wav_pi0_file, "%le", &input_val);
+            Mg2SiO4_wav_pi0[x][y]=input_val;
+            fscanf(input_Mg2SiO4_wav_pi0_file, "%le", &input_val);
+            Mg2SiO4_wav_pi0[x][y]=input_val;
+            fscanf(input_Mg2SiO4_wav_qext_file, "%le", &input_val);
+            Mg2SiO4_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_VO_ir_2310_gg_file, "%le", &input_val);
-            VO_ir_2310_gg[x][y]=input_val;
-            fscanf(input_VO_ir_2310_pi0_file, "%le", &input_val);
-            VO_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_VO_ir_2310_qext_file, "%le", &input_val);
-            VO_ir_2310_qext[x][y]=input_val;
+            fscanf(input_VO_wav_gg_file, "%le", &input_val);
+            VO_wav_gg[x][y]=input_val;
+            fscanf(input_VO_wav_pi0_file, "%le", &input_val);
+            VO_wav_pi0[x][y]=input_val;
+            fscanf(input_VO_wav_qext_file, "%le", &input_val);
+            VO_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_Ni_ir_2310_gg_file, "%le", &input_val);
-            Ni_ir_2310_gg[x][y]=input_val;
-            fscanf(input_Ni_ir_2310_pi0_file, "%le", &input_val);
-            Ni_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_Ni_ir_2310_qext_file, "%le", &input_val);
-            Ni_ir_2310_qext[x][y]=input_val;
+            fscanf(input_Ni_wav_gg_file, "%le", &input_val);
+            Ni_wav_gg[x][y]=input_val;
+            fscanf(input_Ni_wav_pi0_file, "%le", &input_val);
+            Ni_wav_pi0[x][y]=input_val;
+            fscanf(input_Ni_wav_qext_file, "%le", &input_val);
+            Ni_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_Fe_ir_2310_gg_file, "%le", &input_val);
-            Fe_ir_2310_gg[x][y]=input_val;
-            fscanf(input_Fe_ir_2310_pi0_file, "%le", &input_val);
-            Fe_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_Fe_ir_2310_qext_file, "%le", &input_val);
-            Fe_ir_2310_qext[x][y]=input_val;
+            fscanf(input_Fe_wav_gg_file, "%le", &input_val);
+            Fe_wav_gg[x][y]=input_val;
+            fscanf(input_Fe_wav_pi0_file, "%le", &input_val);
+            Fe_wav_pi0[x][y]=input_val;
+            fscanf(input_Fe_wav_qext_file, "%le", &input_val);
+            Fe_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_CaSiO4_ir_2310_gg_file, "%le", &input_val);
-            CaSiO4_ir_2310_gg[x][y]=input_val;
-            fscanf(input_CaSiO4_ir_2310_pi0_file, "%le", &input_val);
-            CaSiO4_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_CaSiO4_ir_2310_qext_file, "%le", &input_val);
-            CaSiO4_ir_2310_qext[x][y]=input_val;
+            fscanf(input_CaSiO4_wav_gg_file, "%le", &input_val);
+            CaSiO4_wav_gg[x][y]=input_val;
+            fscanf(input_CaSiO4_wav_pi0_file, "%le", &input_val);
+            CaSiO4_wav_pi0[x][y]=input_val;
+            fscanf(input_CaSiO4_wav_qext_file, "%le", &input_val);
+            CaSiO4_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_CaTiO3_ir_2310_gg_file, "%le", &input_val);
-            CaTiO3_ir_2310_gg[x][y]=input_val;
-            fscanf(input_CaTiO3_ir_2310_pi0_file, "%le", &input_val);
-            CaTiO3_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_CaTiO3_ir_2310_qext_file, "%le", &input_val);
-            CaTiO3_ir_2310_qext[x][y]=input_val;
+            fscanf(input_CaTiO3_wav_gg_file, "%le", &input_val);
+            CaTiO3_wav_gg[x][y]=input_val;
+            fscanf(input_CaTiO3_wav_pi0_file, "%le", &input_val);
+            CaTiO3_wav_pi0[x][y]=input_val;
+            fscanf(input_CaTiO3_wav_qext_file, "%le", &input_val);
+            CaTiO3_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_Al2O3_ir_2310_gg_file, "%le", &input_val);
-            Al2O3_ir_2310_gg[x][y]=input_val;
-            fscanf(input_Al2O3_ir_2310_pi0_file, "%le", &input_val);
-            Al2O3_ir_2310_pi0[x][y]=input_val;
-            fscanf(input_Al2O3_ir_2310_qext_file, "%le", &input_val);
-            Al2O3_ir_2310_qext[x][y]=input_val;
+            fscanf(input_Al2O3_wav_gg_file, "%le", &input_val);
+            Al2O3_wav_gg[x][y]=input_val;
+            fscanf(input_Al2O3_wav_pi0_file, "%le", &input_val);
+            Al2O3_wav_pi0[x][y]=input_val;
+            fscanf(input_Al2O3_wav_qext_file, "%le", &input_val);
+            Al2O3_wav_qext[x][y]=input_val;
         }
     }
 
-    
+
     // C HARADA -- update for 2stream //
-    int kmin, good_l, good_m, good_val, pressure_index;
+    int kmin, good_l, good_m, good_val, pressure_index, wavelength_index;
     double incident_frac;
     double ***pi0_tot, ***asym_tot;
-    
-    
+
+
     char OUTPUT_FILE[200];
     sprintf(OUTPUT_FILE, "%s%06.2f.dat", OUTPUT_PREFIX, PHASE);
     file = fopen(OUTPUT_FILE, "w");
-    
+
     /*Allocate memory*/
     tau_em = malloc(NLAT*sizeof(double));
     for(l=0; l<NLAT; l++)
@@ -457,7 +463,7 @@ int RT_Emit_3D(double PHASE)
             tau_em[l][m] = malloc(NTAU*sizeof(double));
         }
     }
-    
+
     dtau_em = malloc(NLAT*sizeof(double));
     for(l=0; l<NLAT; l++)
     {
@@ -467,7 +473,7 @@ int RT_Emit_3D(double PHASE)
             dtau_em[l][m] = malloc(NTAU*sizeof(double));
         }
     }
-    
+
     temperature_3d = malloc(NLAT*sizeof(double));
     for(l=0; l<NLAT; l++)
     {
@@ -477,7 +483,7 @@ int RT_Emit_3D(double PHASE)
             temperature_3d[l][m] = malloc(NTAU*sizeof(double));
         }
     }
-    
+
     phi_lon_solid = malloc(NLAT*sizeof(double));
     for(l=0; l<NLAT; l++)
     {
@@ -487,7 +493,7 @@ int RT_Emit_3D(double PHASE)
             phi_lon_solid[l][m] = malloc(NTAU*sizeof(double));
         }
     }
-    
+
     theta_lat_solid = malloc(NLAT*sizeof(double));
     for(l=0; l<NLAT; l++)
     {
@@ -497,7 +503,7 @@ int RT_Emit_3D(double PHASE)
             theta_lat_solid[l][m] = malloc(NTAU*sizeof(double));
         }
     }
-    
+
     dl = malloc(NLAT*sizeof(double));
     for(l=0; l<NLAT; l++)
     {
@@ -528,12 +534,12 @@ int RT_Emit_3D(double PHASE)
             pressure_array[l][m] = malloc(NTAU*sizeof(double));
         }
     }
-    
-    
+
+
     // C HARADA -- update for 2stream //
-    
+
     /* allocate memory for scattering parameters */
-    
+
     pi0_tot = malloc(NLAT*sizeof(double)); // total single scattering albedo
     for(l=0; l<NLAT; l++)
     {
@@ -553,10 +559,10 @@ int RT_Emit_3D(double PHASE)
             asym_tot[l][m] = malloc(NTAU*sizeof(double));
         }
     }
-    
-    
+
+
     /* allocate memory for aero taus and kappas if clouds on */
-    
+
     if(CLOUDS==1){
 
         /* MgSiO3 */
@@ -578,7 +584,7 @@ int RT_Emit_3D(double PHASE)
                 aero_tau_pre_qext_1[l][m] = malloc(NTAU*sizeof(double));
             }
         }
-        
+
         /* Fe */
         aero_kappa_pre_qext_2 = malloc(NLAT*sizeof(double));
         for(l=0; l<NLAT; l++)
@@ -811,47 +817,47 @@ int RT_Emit_3D(double PHASE)
         }
         printf("clouds: ON\n");
     }
-    
+
     else{
         printf("clouds: OFF\n");
     }
-    
+
     if(DOPPLER==1){
         printf("doppler: ON\n");
     }
     else{
         printf("doppler: OFF\n");
     }
-    
+
     theta = dmatrix(0, NLAT-1, 0, NLON-1);
     dtheta = dmatrix(0, NLAT-1, 0, NLON-1);
     dphi = dmatrix(0, NLAT-1, 0, NLON-1);
     phi = dmatrix(0, NLAT-1, 0, NLON-1);
-    
+
     intensity = dmatrix(0, NLAT-1, 0, NLON-1);
     bad_interp_array = dmatrix(0, NLAT-1, 0, NLON-1);
     I_top = dmatrix(0, NLAT-1, 0, NLON-1);
-    
+
     flux_pl = dvector(0, NLAMBDA-1);
     ds = dvector(0, NTAU-1);
-    
+
     lat_rad = dvector(0, NLAT-1);
     lon_rad = dvector(0, NLON-1);
-    
+
     /*   Calculate the angular rotational speed omega */
-    
+
     omega = 2.0*PI / (P_ROT*24.0*60.0*60.0);
-    
+
     /*Calculate ds*/
-    
+
     for(j=NTAU-1; j>=0; j--)
     {
         ds[j] = atmos.alt[j-1] - atmos.alt[j];
     }
     ds[0] = ds[1];
-    
+
     /* calculate new aerosol taus and kappas, corrected for wavelength (if clouds on) */
-    
+
     if(CLOUDS==1){
         for(l=0; l<NLAT; l++){
             for(m=0; m<NLON; m++){
@@ -874,7 +880,7 @@ int RT_Emit_3D(double PHASE)
                 }
             }
         }
-        
+
         for(l=0; l<NLAT; l++){
             for(m=0; m<NLON; m++){
                 for(j=0; j<NTAU; j++){
@@ -894,26 +900,26 @@ int RT_Emit_3D(double PHASE)
                 }
             }
         }
-    }    
+    }
     /*Geometry*/
-    
+
     /*Calculating dl longitude and latitude along line-of-sight*/
     for(l=0;l<NLAT;l++)
     {
         lat_rad[l] = atmos.lat[l] * PI/180.0; /*theta, latitude*/
-        
+
         for(m=0;m<NLON;m++)
         {
             if(atmos.lon[m]>=90.0-PHASE && atmos.lon[m]<=270.0-PHASE)
             {
-                
+
                 lon_rad[m] = atmos.lon[m] * PI/180.0; /*phi, longitude*/
-                
+
                 b = R_PLANET;
                 for(j=NTAU-1; j>=0; j--)
                 {
                     b += ds[j];
-                    
+
                     dl[l][m][j] = pow(SQ(b) - SQ(R_PLANET * sin(lat_rad[l])) - SQ(R_PLANET * cos(lat_rad[l]) * cos(-PI/2. + lon_rad[m] + PHASE*PI/180.0)), 0.5);
                     phi_lon_solid[l][m][j] = 90.0 + acos((R_PLANET * cos(-PI/2. + lon_rad[m] + PHASE*PI/180.0) * cos(lat_rad[l]))/(pow(SQ(b)-SQ(R_PLANET * sin(lat_rad[l])), 0.5))) * 180.0/PI;
                     theta_lat_solid[l][m][j] = asin((R_PLANET * sin(lat_rad[l]))/b) * 180.0/PI;
@@ -932,7 +938,7 @@ int RT_Emit_3D(double PHASE)
             }
         }
     }
-    
+
     /*Calculating solid angle along NLAT*NLON */
     solid = 0.0;
     for(l=0; l<NLAT; l++)
@@ -948,10 +954,10 @@ int RT_Emit_3D(double PHASE)
                 }
                 theta[0][m] = theta_lat_solid[0][m][0]* PI/180.0;
                 theta[NLAT-1][m] = theta_lat_solid[NLAT-1][m][0]* PI/180.0;
-                
+
                 dtheta[0][m] = ( 0.5*(theta_lat_solid[1][m][0]+theta_lat_solid[0][m][0]) + 90)* PI/180.0;
                 dtheta[NLAT-1][m] = (90 - 0.5*(theta_lat_solid[NLAT-1][m][0]+theta_lat_solid[NLAT-2][m][0]))* PI/180.0;
-                                
+
                 if(m>0 && m<NLON-1)
                 {
                     if(atmos.lon[m]>90.0-PHASE && atmos.lon[m]<270.0-PHASE)
@@ -970,7 +976,7 @@ int RT_Emit_3D(double PHASE)
                         phi[l][m] = phi_lon_solid[l][m][0]* PI/180.0;
                     }
                 }
-                
+
                 else if(m==0)
                 {
                     if(atmos.lon[m]>90.0-PHASE && atmos.lon[m]<270.0-PHASE)
@@ -989,7 +995,7 @@ int RT_Emit_3D(double PHASE)
                         phi[l][m] = phi_lon_solid[l][m][0]* PI/180.0;
                     }
                 }
-                
+
                 else if(m==NLON-1)
                 {
                     if(atmos.lon[m]>90.0-PHASE && atmos.lon[m]<270.0-PHASE)
@@ -1008,7 +1014,7 @@ int RT_Emit_3D(double PHASE)
                         phi[l][m] = phi_lon_solid[l][m][0]* PI/180.0;
                     }
                 }
-                
+
                 // Every once in a while dphi becomes negative and it should not be
                 dtheta[l][m] = fabs(dtheta[l][m]);
                 if (dphi[l][m] < 0)
@@ -1023,8 +1029,25 @@ int RT_Emit_3D(double PHASE)
     printf("solid %f\n", solid);
 
     for(i=0; i<NLAMBDA; i++)
-    //for(i=406; i<407; i++)
     {
+        // Find the nearest wavelength  index //
+        wavelength_index = 0;
+        if (atmos.lambda[i] * 1e6 > wavelengths_in_microns[num_wavelength_points - 1])
+        {
+            wavelength_index = num_wavelength_points - 1;
+        }
+        else if (atmos.lambda[i] * 1e6 < wavelengths_in_microns[0])
+        {
+            wavelength_index = 0;
+        }
+        else
+        {
+            while (atmos.lambda[i] * 1e6 > wavelengths_in_microns[wavelength_index])
+            {
+                wavelength_index = wavelength_index+1;
+            }
+        }
+
         for(l=0; l<NLAT; l++)
         {
             for(m=0; m<NLON; m++)
@@ -1038,7 +1061,7 @@ int RT_Emit_3D(double PHASE)
 
         /*Optical depth*/
         for(l=0; l<NLAT; l++)
-        {            
+        {
             for(m=0; m<NLON; m++)
             {
                 if(atmos.lon[m]>=90.0-PHASE && atmos.lon[m]<=270.0-PHASE)
@@ -1049,7 +1072,7 @@ int RT_Emit_3D(double PHASE)
                         Locate(NLON, atmos.lon, phi_lon_solid[l][m][j]-PHASE, &c);
 
                         pressure = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], atmos.P_3d[o][c][j], atmos.P_3d[o][c+1][j], atmos.P_3d[o+1][c][j], atmos.P_3d[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
-                        
+
                         //The pressure breaks this if it's too high
                         if (pressure > 9.99e9)
                         {
@@ -1069,7 +1092,7 @@ int RT_Emit_3D(double PHASE)
                             temperature = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], atmos.T_3d[o][c][j], atmos.T_3d[o][c+1][j], atmos.T_3d[o+1][c][j], atmos.T_3d[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
                             temperature_3d[l][m][j] = temperature;
                         }
-                        
+
                         Locate(NTEMP, opac.T, temperature, &g);
                         Locate(NPRESSURE, opac.P, pressure, &h);
 
@@ -1079,12 +1102,12 @@ int RT_Emit_3D(double PHASE)
                         {
                             u_vel = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], atmos.vel_ew[o][c][j], atmos.vel_ew[o][c+1][j], atmos.vel_ew[o+1][c][j], atmos.vel_ew[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
                             v_vel = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], atmos.vel_ns[o][c][j], atmos.vel_ns[o][c+1][j], atmos.vel_ns[o+1][c][j], atmos.vel_ns[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
-                            w_vel = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], atmos.vel_ve[o][c][j], atmos.vel_ve[o][c+1][j], atmos.vel_ve[o+1][c][j], atmos.vel_ve[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);     
+                            w_vel = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], atmos.vel_ve[o][c][j], atmos.vel_ve[o][c+1][j], atmos.vel_ve[o+1][c][j], atmos.vel_ve[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
                             v_los = u_vel*sin(phi_lon_solid[l][m][j]*PI/180.0) + v_vel*cos(phi_lon_solid[l][m][j]*PI/180.0)*sin(theta_lat_solid[l][m][j]*PI/180.0) - w_vel*cos(phi_lon_solid[l][m][j]*PI/180.0)*cos(theta_lat_solid[l][m][j]*PI/180.0) + cos(INPUT_INCLINATION)*omega*(R_PLANET + atmos.alt[j])*sin(phi_lon_solid[l][m][j]*PI/180.0)*cos(theta_lat_solid[l][m][j]*PI/180.0) + R_VEL*cos((90.0-PHASE)*PI/180.0); /*Everything*/
 
                             delta_lam = atmos.lambda[i]*v_los/CLIGHT;
                             Locate(NLAMBDA, atmos.lambda, atmos.lambda[i]+delta_lam, &ii);
-                            
+
                             if(temperature < 100.0 || atmos.lambda[i]+delta_lam >= atmos.lambda[NLAMBDA-1] || atmos.lambda[i]+delta_lam <= atmos.lambda[0])
                             {
                                 kappa_nu = 0.0;
@@ -1102,7 +1125,7 @@ int RT_Emit_3D(double PHASE)
                                                   opac.kappa[ii+1][h][g+1],
                                                   opac.kappa[ii+1][h+1][g],
                                                   opac.kappa[ii+1][h+1][g+1],
-                                                  temperature, pressure, atmos.lambda[i]+delta_lam);                                
+                                                  temperature, pressure, atmos.lambda[i]+delta_lam);
                             }
                         }
 
@@ -1146,7 +1169,7 @@ int RT_Emit_3D(double PHASE)
 
                             delta_lam = atmos.lambda[i]*v_los/CLIGHT;
                             Locate(NLAMBDA, atmos.lambda, atmos.lambda[i]+delta_lam, &ii);
-                            
+
                             if(temperature < 250.0 || atmos.lambda[i]+delta_lam >= atmos.lambda[NLAMBDA-1] || atmos.lambda[i]+delta_lam <= atmos.lambda[0])
                             {
                                 kappa_nu = 0.0;
@@ -1229,19 +1252,19 @@ int RT_Emit_3D(double PHASE)
                             aero_kappa_pre_qext_interp_12 = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_12[o][c][j], aero_kappa_pre_qext_12[o][c+1][j], aero_kappa_pre_qext_12[o+1][c][j], aero_kappa_pre_qext_12[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
                             aero_kappa_pre_qext_interp_13 = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_13[o][c][j], aero_kappa_pre_qext_13[o][c+1][j], aero_kappa_pre_qext_13[o+1][c][j], aero_kappa_pre_qext_13[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
 
-                            aero_kappa_1 = aero_kappa_pre_qext_interp_1 * KCl_ir_2310_qext[pressure_index][0];
-                            aero_kappa_2 = aero_kappa_pre_qext_interp_2 * ZnS_ir_2310_qext[pressure_index][0];
-                            aero_kappa_3 = aero_kappa_pre_qext_interp_3 * Na2S_ir_2310_qext[pressure_index][0];
-                            aero_kappa_4 = aero_kappa_pre_qext_interp_4 * MnS_ir_2310_qext[pressure_index][0];
-                            aero_kappa_5 = aero_kappa_pre_qext_interp_5 * Cr_ir_2310_qext[pressure_index][0];
-                            aero_kappa_6 = aero_kappa_pre_qext_interp_6 * SiO2_ir_2310_qext[pressure_index][0];
-                            aero_kappa_7 = aero_kappa_pre_qext_interp_7 * Mg2SiO4_ir_2310_qext[pressure_index][0];
-                            aero_kappa_8 = aero_kappa_pre_qext_interp_8 * VO_ir_2310_qext[pressure_index][0];
-                            aero_kappa_9 = aero_kappa_pre_qext_interp_9 * Ni_ir_2310_qext[pressure_index][0];
-                            aero_kappa_10 = aero_kappa_pre_qext_interp_10 * Fe_ir_2310_qext[pressure_index][0];
-                            aero_kappa_11 = aero_kappa_pre_qext_interp_11 * CaSiO4_ir_2310_qext[pressure_index][0];
-                            aero_kappa_12 = aero_kappa_pre_qext_interp_12 * CaTiO3_ir_2310_qext[pressure_index][0];
-                            aero_kappa_13 = aero_kappa_pre_qext_interp_13 * Al2O3_ir_2310_qext[pressure_index][0];
+                            aero_kappa_1 = aero_kappa_pre_qext_interp_1 * KCl_wav_qext[pressure_index][0];
+                            aero_kappa_2 = aero_kappa_pre_qext_interp_2 * ZnS_wav_qext[pressure_index][0];
+                            aero_kappa_3 = aero_kappa_pre_qext_interp_3 * Na2S_wav_qext[pressure_index][0];
+                            aero_kappa_4 = aero_kappa_pre_qext_interp_4 * MnS_wav_qext[pressure_index][0];
+                            aero_kappa_5 = aero_kappa_pre_qext_interp_5 * Cr_wav_qext[pressure_index][0];
+                            aero_kappa_6 = aero_kappa_pre_qext_interp_6 * SiO2_wav_qext[pressure_index][0];
+                            aero_kappa_7 = aero_kappa_pre_qext_interp_7 * Mg2SiO4_wav_qext[pressure_index][0];
+                            aero_kappa_8 = aero_kappa_pre_qext_interp_8 * VO_wav_qext[pressure_index][0];
+                            aero_kappa_9 = aero_kappa_pre_qext_interp_9 * Ni_wav_qext[pressure_index][0];
+                            aero_kappa_10 = aero_kappa_pre_qext_interp_10 * Fe_wav_qext[pressure_index][0];
+                            aero_kappa_11 = aero_kappa_pre_qext_interp_11 * CaSiO4_wav_qext[pressure_index][0];
+                            aero_kappa_12 = aero_kappa_pre_qext_interp_12 * CaTiO3_wav_qext[pressure_index][0];
+                            aero_kappa_13 = aero_kappa_pre_qext_interp_13 * Al2O3_wav_qext[pressure_index][0];
 
                             // So all the cloud wavelength values are not wavelength dependant in the output files
                             // This takes the optical depth and adds the wavelength and particle size dependant scattering
@@ -1277,33 +1300,33 @@ int RT_Emit_3D(double PHASE)
                                 weight_12 = aero_kappa_12 * temp_value;
                                 weight_13 = aero_kappa_13 * temp_value;
 
-                                pi0_tot[l][m][j] =  (weight_1  * KCl_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_2  * ZnS_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_3  * Na2S_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_4  * MnS_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_5  * Cr_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_6  * SiO2_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_7  * Mg2SiO4_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_8  * VO_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_9  * Ni_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_10 * Fe_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_11 * CaSiO4_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_12 * CaTiO3_ir_2310_pi0[pressure_index][0] + \
-                                                     weight_13 * Al2O3_ir_2310_pi0[pressure_index][0]);
+                                pi0_tot[l][m][j] =  (weight_1  * KCl_wav_pi0[pressure_index][0] + \
+                                                     weight_2  * ZnS_wav_pi0[pressure_index][0] + \
+                                                     weight_3  * Na2S_wav_pi0[pressure_index][0] + \
+                                                     weight_4  * MnS_wav_pi0[pressure_index][0] + \
+                                                     weight_5  * Cr_wav_pi0[pressure_index][0] + \
+                                                     weight_6  * SiO2_wav_pi0[pressure_index][0] + \
+                                                     weight_7  * Mg2SiO4_wav_pi0[pressure_index][0] + \
+                                                     weight_8  * VO_wav_pi0[pressure_index][0] + \
+                                                     weight_9  * Ni_wav_pi0[pressure_index][0] + \
+                                                     weight_10 * Fe_wav_pi0[pressure_index][0] + \
+                                                     weight_11 * CaSiO4_wav_pi0[pressure_index][0] + \
+                                                     weight_12 * CaTiO3_wav_pi0[pressure_index][0] + \
+                                                     weight_13 * Al2O3_wav_pi0[pressure_index][0]);
 
-                                asym_tot[l][m][j] = (weight_1  * KCl_ir_2310_gg[pressure_index][0] + \
-                                                     weight_2  * ZnS_ir_2310_gg[pressure_index][0]  + \
-                                                     weight_3  * Na2S_ir_2310_gg[pressure_index][0] + \
-                                                     weight_4  * MnS_ir_2310_gg[pressure_index][0] + \
-                                                     weight_5  * Cr_ir_2310_gg[pressure_index][0] + \
-                                                     weight_6  * SiO2_ir_2310_gg[pressure_index][0] + \
-                                                     weight_7  * Mg2SiO4_ir_2310_gg[pressure_index][0] + \
-                                                     weight_8  * VO_ir_2310_gg[pressure_index][0] + \
-                                                     weight_9  * Ni_ir_2310_gg[pressure_index][0] + \
-                                                     weight_10 * Fe_ir_2310_gg[pressure_index][0] + \
-                                                     weight_11 * CaSiO4_ir_2310_gg[pressure_index][0] + \
-                                                     weight_12 * CaTiO3_ir_2310_gg[pressure_index][0] + \
-                                                     weight_13 * Al2O3_ir_2310_gg[pressure_index][0]);
+                                asym_tot[l][m][j] = (weight_1  * KCl_wav_gg[pressure_index][0] + \
+                                                     weight_2  * ZnS_wav_gg[pressure_index][0]  + \
+                                                     weight_3  * Na2S_wav_gg[pressure_index][0] + \
+                                                     weight_4  * MnS_wav_gg[pressure_index][0] + \
+                                                     weight_5  * Cr_wav_gg[pressure_index][0] + \
+                                                     weight_6  * SiO2_wav_gg[pressure_index][0] + \
+                                                     weight_7  * Mg2SiO4_wav_gg[pressure_index][0] + \
+                                                     weight_8  * VO_wav_gg[pressure_index][0] + \
+                                                     weight_9  * Ni_wav_gg[pressure_index][0] + \
+                                                     weight_10 * Fe_wav_gg[pressure_index][0] + \
+                                                     weight_11 * CaSiO4_wav_gg[pressure_index][0] + \
+                                                     weight_12 * CaTiO3_wav_gg[pressure_index][0] + \
+                                                     weight_13 * Al2O3_wav_gg[pressure_index][0]);
                             }
                         }
                         // if clouds are turned off, need to set scattering params to zero
@@ -1316,8 +1339,8 @@ int RT_Emit_3D(double PHASE)
                     }
                 }
             }
-        }   
-        
+        }
+
         for(l=0; l<NLAT; l++)
         {
             for(m=0; m<NLON; m++)
@@ -1338,10 +1361,10 @@ int RT_Emit_3D(double PHASE)
                 }
             }
         }
-        
+
 
         //Calculate the intensity of emergent rays at each latitude and longitude
-        
+
         // C HARADA -- update for 2stream //
         running_sum = 0.0;
         average = 0.0;
@@ -1353,8 +1376,8 @@ int RT_Emit_3D(double PHASE)
             {
                 intensity[l][m] = 0;
                 if(atmos.lon[m]>=90.0-PHASE && atmos.lon[m]<=270.0-PHASE)
-                {                    
-                    
+                {
+
                     // Find min vert level for 2stream //
                     kmin = 0;
                     for (j = 0; j<NTAU; j++)
@@ -1364,7 +1387,7 @@ int RT_Emit_3D(double PHASE)
                           kmin = j+1;
                         }
                     }
-                    
+
                     if (kmin >= NTAU)
                     {
                         intensity[l][m] = 0;
@@ -1378,14 +1401,14 @@ int RT_Emit_3D(double PHASE)
                     else
                     {
                         intensity[l][m] = two_stream(NTAU, kmin, pi0_tot[l][m], asym_tot[l][m], temperature_3d[l][m], tau_em[l][m], \
-                                                     CLIGHT / atmos.lambda[i], CLIGHT / atmos.lambda[i] - CLIGHT / atmos.lambda[i+1], 
+                                                     CLIGHT / atmos.lambda[i], CLIGHT / atmos.lambda[i] - CLIGHT / atmos.lambda[i+1],
                                                      atmos.incident_frac[l][m][NTAU-10], dtau_em[l][m]);
                     }
                 }
             }
         }
 
-        
+
 
 
         /*
@@ -1416,11 +1439,11 @@ int RT_Emit_3D(double PHASE)
             }
         }
         */
-        
 
 
 
-        
+
+
         /*Calculate the total flux received by us*/
         flux_pl[i] = 0.0;
         for(l=0; l<NLAT; l++)
@@ -1433,19 +1456,19 @@ int RT_Emit_3D(double PHASE)
                 }
             }
         }
-        //fclose(fptr); 
+        //fclose(fptr);
 
-        
+
         if(i % 100 == 0)
         {
             printf("%d out of %d lines (phase: %06.2f)\n", i, NLAMBDA, PHASE);
         }
-        
+
         fprintf(file, "%10.8le\t%le\n", atmos.lambda[i], flux_pl[i] * PI/solid);
-        
+
     }
-    
+
     fclose(file);
-    
+
     return 0;
 }

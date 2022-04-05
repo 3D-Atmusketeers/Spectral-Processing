@@ -46,7 +46,7 @@ USE_FORT_FILES = True
 # There are low resolution spectra and high resolution spectra that can be created
 # There are somethings that need to be changed in the template inputs file to make this happen
 # If you change the underlying data files these might need to be changed
-high_res = True
+high_res = False
 
 # These are the planet files that you need to run the code
 # They should be pretty big files, and don't include the .txt with the names here
@@ -198,7 +198,7 @@ def run_exo(input_paths, inclination_strs, phase_strs, doppler_val):
         else:
             filedata = filedata.replace("<<num_pressure_points>>", "13")
             filedata = filedata.replace("<<num_temperature_points>>", "30")
-            filedata = filedata.replace("<<num_wavelength_points>>", "4616")
+            filedata = filedata.replace("<<num_wavelength_points>>", "2598")
 
             filedata = filedata.replace("<<CHEM_FILE>>", "\"DATA/eos_solar_doppler_2016_cond.dat\"")
             filedata = filedata.replace("<<CH4_FILE>>",  "\"DATA/opacCH4.dat\"")
