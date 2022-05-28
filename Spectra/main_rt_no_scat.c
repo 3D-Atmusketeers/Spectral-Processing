@@ -28,8 +28,6 @@ int main(){
     int i;
     
     for(i=0; i<N_PHASE; i++){
-        PHASE = PHASE;
-        
         printf("Phase: %06.2f\n", PHASE);
         
         TotalOpac();
@@ -45,16 +43,6 @@ int main(){
         printf("\n");
         
     }
-
-  /* Double_TP(); */
-  /* printf("Double_TP done\n"); */
-  
-   /* Calculate_Average(); */
-   /* printf("Calculate_Average done\n"); */
-
-  /* Print_Sub_Stellar(); */
-  /* printf("Sub_Stellar done\n"); */
-
   return 0;
 }
 

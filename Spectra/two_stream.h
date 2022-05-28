@@ -2,9 +2,10 @@
 
 double Planck(double T, double lambda);
 
-double two_stream(int NLAYER, int kmin, double *w0_array, double *g0_array, \
+void two_stream(int NLAYER, int kmin, double *w0_array, double *g0_array, \
                  const double *temperature_array, const double *tau_array, \
-                 double NU, double NU_BIN, double incident_frac, double *dtau_array)
+                 double NU, double NU_BIN, double incident_frac, double *dtau_array, \
+                 double intensity_vals[])
 {
   double mu_1;        // Param for Quadrature or Hemispheric Mean constant
   double mu_0 = 1.0;  // Incident angle of the solar beam
@@ -554,7 +555,9 @@ double two_stream(int NLAYER, int kmin, double *w0_array, double *g0_array, \
     QUADRATURE_TWO_STREAM[J] = TMI[J];
   }
 
-  TOTAL_FLUX = (HEMISPHERIC_SOURCE_FNC[0] / (2 * PI)) + (fabs(QUADRATURE_TWO_STREAM[0]) / (4.0 * PI));
+  intensity_vals[0] = fabs(HEMISPHERIC_SOURCE_FNC[0]) / (2.0 * PI);
+  intensity_vals[1] = fabs(QUADRATURE_TWO_STREAM[0])  / (4.0 * PI);
 
-  return TOTAL_FLUX;
+  //TOTAL_FLUX = fabs(HEMISPHERIC_SOURCE_FNC[0] / (2 * PI)) + (fabs(QUADRATURE_TWO_STREAM[0]) / (4.0 * PI));
+  //return 0.0;
 }

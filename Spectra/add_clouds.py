@@ -5,7 +5,7 @@ from tqdm import tqdm
 pd.options.mode.chained_assignment = None  # default='warn'
 
 
-def add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOLEF, aerosol_layers, INITIAL_NTAU):
+def add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOLEF, aerosol_layers, INITIAL_NTAU, GASCON):
     column_names = ['lat' , 'lon', 'level' , 'altitude(m)',
                     'pressure(bars)', 'temp(k)',
                     'EW vel(m/s)','NS vel','vert vel']
@@ -64,16 +64,36 @@ def add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOL
     df['g013']  = 0.
     df['pi013'] = 0.
 
+    df_copy = df.copy(deep=True)
 
-    input_pressure_array_cgs               = np.asarray([100.239698379016,132.141657859,174.196630916642,229.635882539686,302.719049572289,399.061426988061,526.065415224947,693.48927854176,914.196914554296,1205.14624297868,1588.69215575258,2094.30413981254,2760.83054489446,3639.48346981948,4797.77360895418,6324.69739007194,8337.57495379246,10991.064366056,14489.0446644606,19100.2807641699,25179.0738256863,33192.4837413202,43756.2153614193,57681.9257539164,76039.5873180106,100239.698379016,132141.657858999,174196.630916641,229635.882539685,302719.049572288,399061.426988059,526065.415224945,693489.278541758,914196.914554293,1205146.24297867,1588692.15575257,2094304.13981253,2760830.54489445,3639483.46981947,4797773.60895417,6324697.39007192,8337574.95379243,10991064.366056,14489044.6644605,19100280.7641698,25179073.8256862,33192483.7413201,43756215.3614192,57681925.7539162,76039587.3180104])
-    input_particle_size_array_in_meters    = np.asarray([1.00000000E-07, 1.15139540E-07, 1.32571137E-07,1.52641797E-07, 1.75751062E-07,2.02358965E-07, 2.32995181E-07, 2.68269580E-07, 3.08884360E-07, 3.55648031E-07, 4.09491506E-07,4.71486636E-07, 5.42867544E-07, 6.25055193E-07, 7.19685673E-07, 8.28642773E-07, 9.54095476E-07,1.09854114E-06, 1.26485522E-06, 1.45634848E-06, 1.67683294E-06, 1.93069773E-06, 2.22299648E-06,2.55954792E-06, 2.94705170E-06, 3.39322177E-06, 3.90693994E-06, 4.49843267E-06, 5.17947468E-06,5.96362332E-06, 6.86648845E-06, 7.90604321E-06, 9.10298178E-06, 1.04811313E-05, 1.20679264E-05,1.38949549E-05, 1.59985872E-05, 1.84206997E-05, 2.12095089E-05, 2.44205309E-05, 2.81176870E-05,3.23745754E-05, 3.72759372E-05, 4.29193426E-05, 4.94171336E-05, 5.68986603E-05, 6.55128557E-05,7.54312006E-05, 8.68511374E-05, 1.00000000E-04])
-    input_temperature_array                = np.asarray([500.00000000, 551.02040816, 602.04081633, 653.06122449, 704.08163265,755.10204082, 806.12244898, 857.14285714, 908.16326531, 959.18367347, 1010.20408163, 1061.2244898,1112.24489796, 1163.26530612, 1214.28571429, 1265.30612245, 1316.32653061, 1367.34693878, 1418.36734694,1469.3877551, 1520.40816327, 1571.42857143, 1622.44897959, 1673.46938776, 1724.48979592, 1775.51020408,1826.53061224, 1877.55102041, 1928.57142857, 1979.59183673, 2030.6122449, 2081.63265306, 2132.65306122,2183.67346939, 2234.69387755, 2285.71428571, 2336.73469388, 2387.75510204, 2438.7755102, 2489.79591837,2540.81632653, 2591.83673469, 2642.85714286, 2693.87755102, 2744.89795918, 2795.91836735, 2846.93877551,2897.95918367, 2948.97959184, 3000.00000000])
-    particle_size_vs_layer_array_in_meters = np.asarray([0.1000E-6, 0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6, 0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1000E-6,0.1023E-6,0.1060E-6, 0.1108E-6,0.1170E-6,0.1250E-6,0.1360E-6,0.1500E-6,0.1950E-6,0.2285E-6,0.2723E-6,0.3300E-6,0.4060E-6, 0.5060E-6,0.6387E-6,0.8130E-6,1.0430E-6,1.3458E-6,1.7450E-6,2.2710E-6,2.9660E-6,3.8800E-6,5.0870E-6, 6.6767E-6,8.7720E-6,11.536E-6,15.1780E-6,19.9800E-6,26.3100E-6,34.6500E-6,45.6500E-6,60.1540E-6, 79.2700E-6])
-
+    # The input particle size is used ONLY for the lookup of the scattering properties in the scattering tables
+    input_pressure_array_cgs               = np.asarray([1.000e+00, 1.460e+00, 2.120e+00, 3.090e+00, 4.500e+00, 6.550e+00, 9.540e+00, 1.389e+01, 2.024e+01, 2.947e+01, 4.292e+01, 6.251e+01, 9.103e+01, 1.326e+02, 1.931e+02, 2.812e+02, 4.095e+02, 5.964e+02, 8.685e+02, 1.265e+03, 1.842e+03, 2.683e+03, 3.907e+03, 5.690e+03, 8.286e+03, 1.207e+04, 1.758e+04, 2.560e+04, 3.728e+04, 5.429e+04, 7.906e+04, 1.151e+05, 1.677e+05, 2.442e+05, 3.556e+05, 5.179e+05, 7.543e+05, 1.099e+06, 1.600e+06, 2.330e+06, 3.393e+06, 4.942e+06, 7.197e+06, 1.048e+07, 1.526e+07, 2.223e+07, 3.237e+07, 4.715e+07, 6.866e+07, 1.000e+08])
+    input_particle_size_array_in_meters    = np.asarray([1.000e-08, 1.207e-08, 1.456e-08, 1.758e-08, 2.121e-08, 2.560e-08, 3.089e-08, 3.728e-08, 4.498e-08, 5.429e-08, 6.551e-08, 7.906e-08, 9.541e-08, 1.151e-07, 1.389e-07, 1.677e-07, 2.024e-07, 2.442e-07, 2.947e-07, 3.556e-07, 4.292e-07, 5.179e-07, 6.251e-07, 7.543e-07, 9.103e-07, 1.099e-06, 1.326e-06, 1.600e-06, 1.931e-06, 2.330e-06, 2.812e-06, 3.393e-06, 4.095e-06, 4.942e-06, 5.964e-06, 7.197e-06, 8.685e-06, 1.048e-05, 1.265e-05, 1.526e-05, 1.842e-05, 2.223e-05, 2.683e-05, 3.237e-05, 3.907e-05, 4.715e-05, 5.690e-05, 6.866e-05, 8.286e-05, 1.000e-04])
+    input_temperature_array                = np.asarray([1.000e+02, 1.796e+02, 2.592e+02, 3.388e+02, 4.184e+02, 4.980e+02, 5.776e+02, 6.571e+02, 7.367e+02, 8.163e+02, 8.959e+02, 9.755e+02, 1.055e+03, 1.135e+03, 1.214e+03, 1.294e+03, 1.373e+03, 1.453e+03, 1.533e+03, 1.612e+03, 1.692e+03, 1.771e+03, 1.851e+03, 1.931e+03, 2.010e+03, 2.090e+03, 2.169e+03, 2.249e+03, 2.329e+03, 2.408e+03, 2.488e+03, 2.567e+03, 2.647e+03, 2.727e+03, 2.806e+03, 2.886e+03, 2.965e+03, 3.045e+03, 3.124e+03, 3.204e+03, 3.284e+03, 3.363e+03, 3.443e+03, 3.522e+03, 3.602e+03, 3.682e+03, 3.761e+03, 3.841e+03, 3.920e+03, 4.000e+03])
+    particle_size_vs_layer_array_in_meters = np.asarray([1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.000e-07, 1.007e-07, 1.048e-07, 1.111e-07, 1.201e-07, 1.333e-07, 1.556e-07, 2.106e-07, 2.655e-07, 3.452e-07, 4.609e-07, 6.302e-07, 8.764e-07, 1.235e-06, 1.757e-06, 2.517e-06, 3.624e-06, 5.237e-06, 7.585e-06, 1.100e-05, 1.599e-05, 2.324e-05, 3.380e-05, 4.918e-05, 7.159e-05, 1.042e-04])
 
     DENSITY = [1.98e3,4.09e3,1.86e3,4.0e3,5.22e3,2.65e3,3.27e3,5.76e3,8.9e3,7.9e3,3.34e3,3.98e3,3.95e3]
-    FMOLW   = [31.59,41.30,33.07,36.87,64.40,25.46,59.61,28.37,24.87,23.66,72.99,50.83,43.20]
-    CORFACT = [1,0,1.0,1.0,1.0,1.0,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000]
+
+    CLOUD_MOLAR_MASSES = [74.55E-3,   #
+                          97.47E-3,   # ZnS
+                          78.05E-3,   # Na2S
+                          87.00E-3,   # MnS
+                          52.00E-3,   # Cr
+                          60.08E-3,   # SiO2
+                          160.95E-3,  # Mg2Si04
+                          66.94E-3,   # VO
+                          58.69E-3,   # Ni
+                          55.85E-3,   # Fe
+                          172.23E-3,  # Ca2Si04
+                          135.94E-3,  # CaTiO3
+                          102.00E-3]  # Al2O3
+
+    FMOLW = [0] * len(CLOUD_MOLAR_MASSES)
+    GAS_CONSTANT_R = 8.314462618
+    for j in range(len(CLOUD_MOLAR_MASSES)):
+        FMOLW[j] = CLOUD_MOLAR_MASSES[j] / (GAS_CONSTANT_R/GASCON)
+
+    CORFACT = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.40, 0.55, 0.70, 0.85, 1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000]
 
     TconKCl     = [617.032,621.573,626.038,630.552,635.053, 639.555,644.050,648.556,653.049,657.552,662.043,666.609,671.436,676.532,681.879,687.233,692.462,697.665,702.916,708.306,713.767,719.366,725.024,730.775,736.460,742.266,748.065,753.932,759.779,765.571, 771.346,777.201,783.301,789.715,796.379,803.117,809.863,816.737,823.798,831.052,838.426,845.980,853.873,862.074,870.494,878.913,887.351,895.768,904.198,912.867,917.385]
     TconZnS     = [708.296,712.010,716.704,719.507,722.309,727.329,730.718,736.323,739.126,744.731,747.534,753.139,755.942,761.547,764.350,769.955,772.758,778.363,783.969,788.079,792.377,797.982,803.587,806.390, 811.995,815.183,823.206,828.812,834.364,840.022, 845.628,851.233,856.839,862.444,868.049,873.655,879.260,884.865,890.471,896.076,901.682,907.287,915.695,921.897,929.708,936.547,943.722,949.327,955.732,963.063, 966.143]
@@ -149,7 +169,7 @@ def add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOL
 
     G = grav
 
-    print ("Adding Clouds, this just fills in 0s unless MOLEF is specified")
+    print ("Adding Clouds, no scattering params, this just fills in 0s unless MOLEF is specified")
     if CLOUDS == 1:
         max_cloud_level1 = 0
         max_cloud_level2 = 0
@@ -374,6 +394,234 @@ def add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOL
         pass
 
     planet_file_with_clouds = path + planet_name + '_with_clouds.txt'
-    np.savetxt(planet_file_with_clouds, df.values,
-               fmt=' '.join(['%5.2f']*2 + ['%3d']*1 + ['%9.2E']*6 + ['%9.2E']*39 + ['\t']))
+    np.savetxt(planet_file_with_clouds, df.values, fmt=' '.join(['%5.2f']*2 + ['%3d']*1 + ['%9.2E']*6 + ['%9.2E']*39 + ['\t']))
+
+
+    print ("Adding Clouds, with scattering params, this is just for the graphing stuff to have a copy")
+    if CLOUDS == 1:
+        max_cloud_level1 = 0
+        max_cloud_level2 = 0
+        max_cloud_level3 = 0
+        max_cloud_level4 = 0
+        max_cloud_level5 = 0
+        max_cloud_level6 = 0
+        max_cloud_level7 = 0
+        max_cloud_level8 = 0
+        max_cloud_level9 = 0
+        max_cloud_level10 = 0
+        max_cloud_level11 = 0
+        max_cloud_level12 = 0
+        max_cloud_level13 = 0
+        for z in tqdm(range(len(df_copy))):
+            i = len(df_copy) - z - 1
+            layer_index   = np.abs(input_pressure_array_cgs - df_copy['pressure(bars)'][i]*1e6).argmin()
+            temp_loc      = np.abs(input_temperature_array  - df_copy['temp(k)'][i]).argmin()
+            particle_size = particle_size_vs_layer_array_in_meters[layer_index]
+            size_loc      = np.abs(input_particle_size_array_in_meters  - particle_size).argmin()
+
+            # This is in SI
+            dpg           = (df_copy['pressure(bars)'][i]*1e5/G)
+            CLOUD_INDEX = 0
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau1'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau1'][i] > 0):
+                df_copy['g01'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi01'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau1'][i] != 0):
+                max_cloud_level1   = max(layer_index - aerosol_layers, 0, max_cloud_level1)
+            if (layer_index <= max_cloud_level1):
+                df_copy['tau1'][i] = 0
+                df_copy['g01'][i]  = 0
+                df_copy['pi01'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level1 = 0
+
+
+            CLOUD_INDEX = 1
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau2'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau2'][i] > 0):
+                df_copy['g02'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi02'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau2'][i] != 0):
+                max_cloud_level2   = max(layer_index - aerosol_layers, 0, max_cloud_level2)
+            if (layer_index <= max_cloud_level2):
+                df_copy['tau2'][i] = 0
+                df_copy['g02'][i]  = 0
+                df_copy['pi02'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level2 = 0
+
+            CLOUD_INDEX = 2
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau3'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau3'][i] > 0):
+                df_copy['g03'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi03'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau3'][i] != 0):
+                max_cloud_level3   = max(layer_index - aerosol_layers, 0, max_cloud_level3)
+            if (layer_index <= max_cloud_level3):
+                df_copy['tau3'][i] = 0
+                df_copy['g03'][i]  = 0
+                df_copy['pi03'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level3 = 0
+
+            CLOUD_INDEX = 3
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau4'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau4'][i] > 0):
+                df_copy['g04'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi04'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau4'][i] != 0):
+                max_cloud_level4   = max(layer_index - aerosol_layers, 0, max_cloud_level4)
+            if (layer_index <= max_cloud_level4):
+                df_copy['tau4'][i] = 0
+                df_copy['g04'][i]  = 0
+                df_copy['pi04'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level4 = 0
+
+            CLOUD_INDEX = 4
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau5'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau5'][i] > 0):
+                df_copy['g05'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi05'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau5'][i] != 0):
+                max_cloud_level5   = max(layer_index - aerosol_layers, 0, max_cloud_level5)
+            if (layer_index <= max_cloud_level5):
+                df_copy['tau5'][i] = 0
+                df_copy['g05'][i]  = 0
+                df_copy['pi05'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level5 = 0
+
+
+            CLOUD_INDEX = 5
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau6'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau6'][i] > 0):
+                df_copy['g06'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi06'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau6'][i] != 0):
+                max_cloud_level6   = max(layer_index - aerosol_layers, 0, max_cloud_level6)
+            if (layer_index <= max_cloud_level6):
+                df_copy['tau6'][i] = 0
+                df_copy['g06'][i]  = 0
+                df_copy['pi06'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level6 = 0
+
+            CLOUD_INDEX = 6
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau7'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau7'][i] > 0):
+                df_copy['g07'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi07'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau7'][i] > 1e-10):
+                max_cloud_level7 = max(layer_index - aerosol_layers, 0.0, max_cloud_level7)
+            if (layer_index <= max_cloud_level7):
+                df_copy['tau7'][i] = 0
+                df_copy['g07'][i]  = 0
+                df_copy['pi07'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level7 = 0
+
+
+            CLOUD_INDEX = 7
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau8'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau8'][i] > 0):
+                df_copy['g08'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi08'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau8'][i] != 0):
+                max_cloud_level8 = max(layer_index - aerosol_layers, 0, max_cloud_level8)
+            if (layer_index <= max_cloud_level8):
+                df_copy['tau8'][i] = 0
+                df_copy['g08'][i]  = 0
+                df_copy['pi08'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level8 = 0
+
+            CLOUD_INDEX = 8
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau9'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau9'][i] > 0):
+                df_copy['g09'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi09'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau9'][i] != 0):
+                max_cloud_level9   = max(layer_index - aerosol_layers, 0, max_cloud_level9)
+            if (layer_index <= max_cloud_level9):
+                df_copy['tau9'][i] = 0
+                df_copy['g09'][i]  = 0
+                df_copy['pi09'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level9 = 0
+
+            CLOUD_INDEX = 9
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau10'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau10'][i] > 0):
+                df_copy['g010'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi010'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau10'][i] != 0):
+                max_cloud_level10   = max(layer_index - aerosol_layers, 0, max_cloud_level10)
+            if (layer_index <= max_cloud_level10):
+                df_copy['tau10'][i] = 0
+                df_copy['g010'][i]  = 0
+                df_copy['pi010'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level10 = 0
+
+            CLOUD_INDEX = 10
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau11'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau11'][i] > 0):
+                df_copy['g011'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi011'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau11'][i] != 0):
+                max_cloud_level11   = max(layer_index - aerosol_layers, 0, max_cloud_level11)
+            if (layer_index <= max_cloud_level11):
+                df_copy['tau11'][i] = 0
+                df_copy['g011'][i]  = 0
+                df_copy['pi011'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level11 = 0
+
+            CLOUD_INDEX = 11
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau12'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau12'][i] > 0):
+                df_copy['g012'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi012'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau12'][i] != 0):
+                max_cloud_level12   = max(layer_index - aerosol_layers, 0, max_cloud_level12)
+            if (layer_index <= max_cloud_level12):
+                df_copy['tau12'][i] = 0
+                df_copy['g012'][i]  = 0
+                df_copy['pi012'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level12 = 0
+
+            CLOUD_INDEX = 12
+            cond_fact = (min(max((Tconds[CLOUD_INDEX][layer_index]-df_copy['temp(k)'][i]) / 10.0, 0.0), 1.0))
+            df_copy['tau13'][i] = dpg * MOLEF[CLOUD_INDEX]*3./4./particle_size/DENSITY[CLOUD_INDEX]*FMOLW[CLOUD_INDEX]*cond_fact*MTLX*CORFACT[layer_index]*QE_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau13'][i] > 0):
+                df_copy['g013'][i]  = G0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+                df_copy['pi013'][i] = PI0_OPPR[CLOUD_INDEX][size_loc][temp_loc]
+            if (df_copy['tau13'][i] != 0):
+                max_cloud_level13   = max(layer_index - aerosol_layers, 0, max_cloud_level13)
+            if (layer_index <= max_cloud_level13):
+                df_copy['tau13'][i] = 0
+                df_copy['g013'][i]  = 0
+                df_copy['pi013'][i] = 0
+            if (layer_index == INITIAL_NTAU-1):
+                max_cloud_level13 = 0
+    else:
+        pass
+
+    planet_file_with_clouds = path + planet_name + '_with_clouds_and_scattering.txt'
+    np.savetxt(planet_file_with_clouds, df_copy.values, fmt=' '.join(['%5.2f']*2 + ['%3d']*1 + ['%9.2E']*6 + ['%9.2E']*39 + ['\t']))
+
     return None

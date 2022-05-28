@@ -1,6 +1,6 @@
 # Ignore some big data files
 GCM-OUTPUT/*
-PLANETS/*
+Planets/*
 Spectra/OUT/*
 Spectra/DATA/*
 Spectra/SCATTERING_DATA/*

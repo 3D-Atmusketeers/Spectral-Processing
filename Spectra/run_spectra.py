@@ -14,7 +14,7 @@ import re
 
 # Phases in degrees, inclination in radians (sorry)
 # An inclination of 0 corresponds to edge on
-phases = [0.0]
+phases = [0.0, 30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 240.0, 270.0, 300.0, 330.0]
 inclinations = [0.0]
 system_obliquity = 0
 
@@ -46,12 +46,16 @@ USE_FORT_FILES = True
 # There are low resolution spectra and high resolution spectra that can be created
 # There are somethings that need to be changed in the template inputs file to make this happen
 # If you change the underlying data files these might need to be changed
-high_res = False
+high_res = True
+
+
+# HD209-Table1-No-Clouds-Sponge
+# HD209-Table1-Ya-Clouds-Thin-Nuc-High-TSPD
 
 # These are the planet files that you need to run the code
 # They should be pretty big files, and don't include the .txt with the names here
-planet_name = 'HD209-Dogray-Ya-Clouds-Thin-Nuc'
-runname     = 'HD209-Dogray-Ya-Clouds-Thin-Nuc/Isaac-Tests'
+planet_name = 'HD209-Dogray-Ya-Clouds-Thic-Nuc'
+runname     = 'HD209-Dogray-Ya-Clouds-Thic-Nuc/Isaac-Tests'
 path        = '../GCM-OUTPUT/'
 
 # These values are used mostly for the fort files
@@ -73,7 +77,7 @@ MTLX       = 0.1
 #MOLEF      = [1.23e-7,4.06e-8,9.35e-7,3.11e-7,4.4e-7, 3.26e-5,1.745e-5,9.56e-9,1.61e-6,2.94e-5,1.99e-6,7.83e-8,1.385e-6]
 MOLEF      = [1.23e-7,0.0,0.0,0.0,4.4e-7,3.26e-5,1.745e-5,9.56e-9,0.0,0.0,1.99e-6,7.83e-8,1.385e-6]
 #MOLEF      = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-aerosol_layers = 5
+aerosol_layers = 50
 
 print ("Gravity =  ",     grav)
 print ("Number of OOM = ", oom)
@@ -94,9 +98,9 @@ else:
 
 surfp=100 #surface pressure, in bars
 tgr  =3000 #temperature at 100 bars
-ORB_SEP      = 4.94e+09
-STELLAR_TEMP = 6250
-R_STAR       = 1.204e+09
+ORB_SEP      = 0.047 * 1.496e11
+STELLAR_TEMP = 6071
+R_STAR       = 1.203 * 6.957e8
 
 print ("Surface Pressure = ",surfp)
 print ("Ground  Temperature = ",tgr)
@@ -226,7 +230,7 @@ output_paths = []
 inclination_strs = []
 phase_strs = []
 
-"""
+
 # Convert the fort files to the correct format
 if USE_FORT_FILES == True:
     convert_fort_files.convert_to_correct_format(runname, planet_name, INITIAL_NTAU, surfp, oom, tgr, grav, gasconst)
@@ -234,7 +238,7 @@ if USE_FORT_FILES == True:
 else:
     pass
 
-add_clouds.add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOLEF, aerosol_layers, INITIAL_NTAU)
+add_clouds.add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOLEF, aerosol_layers, INITIAL_NTAU, gasconst)
 
 # Regrid the file to constant altitude and the correct number of layers
 altitude_regridding.regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, INITIAL_NTAU, NLON, NTAU)
@@ -242,7 +246,8 @@ print ("Regridded the planet to constant altitude")
 
 # If you already have the Final planet file creates you can commend out run_grid and double planet file
 run_grid.run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT, NLON, grid_lat_min, grid_lat_max, grid_lon_min, grid_lon_max, ONLY_PHASE)
-"""
+
+
 # Get all the files that you want to run
 input_paths, inclination_strs, phase_strs = get_run_lists(phases, inclinations)
 

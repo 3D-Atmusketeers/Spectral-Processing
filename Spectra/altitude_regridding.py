@@ -1,5 +1,7 @@
 from tqdm import tqdm
-
+import numpy as np
+from scipy import interpolate
+from scipy.signal import savgol_filter
 '''
 
 
@@ -52,20 +54,11 @@ def regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, NTAU, NLON
     new_file = '../Planets/'    + planet_name + 'with_clouds.txt'
 
     smoothing = False
-
     NPARAMS = 48
 
     #########################################
     #			END USER INPUTS				#
     #########################################
-
-
-    ### ----- IMPORT LIBRARIES ----- ###
-
-
-    import numpy as np
-    from scipy import interpolate
-    from scipy.signal import savgol_filter
 
     ### ----- FIND NEW ALTITUDE GRID ----- ###
     def altitudes(data):
