@@ -14,7 +14,7 @@ import re
 
 # Phases in degrees, inclination in radians (sorry)
 # An inclination of 0 corresponds to edge on
-phases = [0.0, 30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 240.0, 270.0, 300.0, 330.0]
+phases = [0.0]
 inclinations = [0.0]
 system_obliquity = 0
 
@@ -95,6 +95,7 @@ if all(i < 1e-20 for i in MOLEF):
     CLOUDS = 0
 else:
     CLOUDS = 1
+
 
 surfp=100 #surface pressure, in bars
 tgr  =3000 #temperature at 100 bars
@@ -230,7 +231,7 @@ output_paths = []
 inclination_strs = []
 phase_strs = []
 
-
+"""
 # Convert the fort files to the correct format
 if USE_FORT_FILES == True:
     convert_fort_files.convert_to_correct_format(runname, planet_name, INITIAL_NTAU, surfp, oom, tgr, grav, gasconst)
@@ -246,7 +247,7 @@ print ("Regridded the planet to constant altitude")
 
 # If you already have the Final planet file creates you can commend out run_grid and double planet file
 run_grid.run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT, NLON, grid_lat_min, grid_lat_max, grid_lon_min, grid_lon_max, ONLY_PHASE)
-
+"""
 
 # Get all the files that you want to run
 input_paths, inclination_strs, phase_strs = get_run_lists(phases, inclinations)

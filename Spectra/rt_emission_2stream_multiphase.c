@@ -96,6 +96,7 @@ int RT_Emit_3D(double PHASE)
     int i, j, k, l, m, n, o, c, g, h, ii;
     double dphid, thetad, dthetad;
     FILE *file;
+    FILE *finished_output_file;
     double solid;
     double average, running_sum, num_points;
     double u_vel, v_vel, w_vel, v_los, delta_lam, omega;
@@ -391,7 +392,7 @@ int RT_Emit_3D(double PHASE)
             SiO2_wav_qext[x][y]=input_val;
 
 
-            fscanf(input_Mg2SiO4_wav_pi0_file, "%le", &input_val);
+            fscanf(input_Mg2SiO4_wav_gg_file, "%le", &input_val);
             Mg2SiO4_wav_pi0[x][y]=input_val;
             fscanf(input_Mg2SiO4_wav_pi0_file, "%le", &input_val);
             Mg2SiO4_wav_pi0[x][y]=input_val;
@@ -457,7 +458,7 @@ int RT_Emit_3D(double PHASE)
 
     char OUTPUT_FILE[200];
     sprintf(OUTPUT_FILE, "%s%06.2f.dat", OUTPUT_PREFIX, PHASE);
-    file = fopen(OUTPUT_FILE, "w");
+    finished_output_file = fopen(OUTPUT_FILE, "w");
 
     /*Allocate memory*/
     tau_em = malloc(NLAT*sizeof(double));
@@ -1262,15 +1263,15 @@ int RT_Emit_3D(double PHASE)
                             aero_kappa_pre_qext_interp_12 = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_12[o][c][j], aero_kappa_pre_qext_12[o][c+1][j], aero_kappa_pre_qext_12[o+1][c][j], aero_kappa_pre_qext_12[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
                             aero_kappa_pre_qext_interp_13 = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_13[o][c][j], aero_kappa_pre_qext_13[o][c+1][j], aero_kappa_pre_qext_13[o+1][c][j], aero_kappa_pre_qext_13[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
 
-                            aero_kappa_1 = aero_kappa_pre_qext_interp_1 * KCl_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_2 = aero_kappa_pre_qext_interp_2 * ZnS_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_3 = aero_kappa_pre_qext_interp_3 * Na2S_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_4 = aero_kappa_pre_qext_interp_4 * MnS_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_5 = aero_kappa_pre_qext_interp_5 * Cr_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_6 = aero_kappa_pre_qext_interp_6 * SiO2_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_7 = aero_kappa_pre_qext_interp_7 * Mg2SiO4_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_8 = aero_kappa_pre_qext_interp_8 * VO_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_9 = aero_kappa_pre_qext_interp_9 * Ni_wav_qext[pressure_index][wavelength_index];
+                            aero_kappa_1 = aero_kappa_pre_qext_interp_1   * KCl_wav_qext[pressure_index][wavelength_index];
+                            aero_kappa_2 = aero_kappa_pre_qext_interp_2   * ZnS_wav_qext[pressure_index][wavelength_index];
+                            aero_kappa_3 = aero_kappa_pre_qext_interp_3   * Na2S_wav_qext[pressure_index][wavelength_index];
+                            aero_kappa_4 = aero_kappa_pre_qext_interp_4   * MnS_wav_qext[pressure_index][wavelength_index];
+                            aero_kappa_5 = aero_kappa_pre_qext_interp_5   * Cr_wav_qext[pressure_index][wavelength_index];
+                            aero_kappa_6 = aero_kappa_pre_qext_interp_6   * SiO2_wav_qext[pressure_index][wavelength_index];
+                            aero_kappa_7 = aero_kappa_pre_qext_interp_7   * Mg2SiO4_wav_qext[pressure_index][wavelength_index];
+                            aero_kappa_8 = aero_kappa_pre_qext_interp_8   * VO_wav_qext[pressure_index][wavelength_index];
+                            aero_kappa_9 = aero_kappa_pre_qext_interp_9   * Ni_wav_qext[pressure_index][wavelength_index];
                             aero_kappa_10 = aero_kappa_pre_qext_interp_10 * Fe_wav_qext[pressure_index][wavelength_index];
                             aero_kappa_11 = aero_kappa_pre_qext_interp_11 * CaSiO4_wav_qext[pressure_index][wavelength_index];
                             aero_kappa_12 = aero_kappa_pre_qext_interp_12 * CaTiO3_wav_qext[pressure_index][wavelength_index];
@@ -1284,8 +1285,9 @@ int RT_Emit_3D(double PHASE)
                                                 aero_kappa_9 + aero_kappa_10 + aero_kappa_11 + aero_kappa_12 + \
                                                 aero_kappa_13;
 
-                            if (dtau_em[l][m][j] < 1e-3 || total_cloud_kappa < 1e-5 || kappa_nu < 1e-10 || dl[l][m][j] < 1e-10)
+                            //if (dtau_em[l][m][j] < 1e-5 || total_cloud_kappa < 1e-5 || kappa_nu < 1e-10 || dl[l][m][j] < 1e-10)
                             //if (dtau_em[l][m][j] < 1e-50 || total_cloud_kappa < 1e-50 || kappa_nu < 1e-50 || dl[l][m][j] < 1e-50)
+                            if (dtau_em[l][m][j] < 1e-50)
                             {
                                 pi0_tot[l][m][j] = 0.0;
                                 asym_tot[l][m][j] = 0.0;
@@ -1345,7 +1347,6 @@ int RT_Emit_3D(double PHASE)
                             pi0_tot[l][m][j] = 0.0;
                             asym_tot[l][m][j] = 0.0;
                         }
-
                     }
                 }
             }
@@ -1374,7 +1375,6 @@ int RT_Emit_3D(double PHASE)
 
 
         //Calculate the intensity of emergent rays at each latitude and longitude
-
         running_sum = 0.0;
         average = 0.0;
         for(l=0; l<NLAT; l++)
@@ -1396,8 +1396,6 @@ int RT_Emit_3D(double PHASE)
                         }
                     }
 
-
-
                     if (kmin >= NTAU)
                     {
                         intensity[l][m] = 0;
@@ -1411,12 +1409,6 @@ int RT_Emit_3D(double PHASE)
 
                     else
                     {
-                        //intensity[l][m] = two_stream(NTAU, kmin, pi0_tot[l][m], \
-                        //                             asym_tot[l][m], temperature_3d[l][m], tau_em[l][m], \
-                        //                             CLIGHT / atmos.lambda[i], \
-                        //                             CLIGHT / atmos.lambda[i] - CLIGHT / atmos.lambda[i+1], \
-                        //                             atmos.incident_frac[l][m][NTAU-10], dtau_em[l][m]);
-
                         two_stream(NTAU, kmin, pi0_tot[l][m], \
                                    asym_tot[l][m], temperature_3d[l][m], tau_em[l][m], \
                                    CLIGHT / atmos.lambda[i], \
@@ -1464,6 +1456,7 @@ int RT_Emit_3D(double PHASE)
         /*Calculate the total flux received by us*/
         flux_pl[i] = 0.0;
         flux_reflected[i] = 0.0;
+
         for(l=0; l<NLAT; l++)
         {
             for(m=0; m<NLON; m++)
@@ -1482,10 +1475,9 @@ int RT_Emit_3D(double PHASE)
             printf("%d out of %d lines (phase: %06.2f)\n", i, NLAMBDA, PHASE);
         }
 
-        fprintf(file, "%10.8e\t%10.8e\t%10.8e\n", atmos.lambda[i], flux_pl[i] * PI/solid, flux_reflected[i] * PI/solid);
+        fprintf(finished_output_file, "%10.8le %le %le\n", atmos.lambda[i], flux_pl[i] * PI/solid, flux_reflected[i] * PI/solid);
     }
 
-    fclose(file);
-
+    fclose(finished_output_file);
     return 0;
 }
