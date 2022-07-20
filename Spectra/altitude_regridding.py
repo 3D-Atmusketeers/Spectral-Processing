@@ -2,59 +2,16 @@ from tqdm import tqdm
 import numpy as np
 from scipy import interpolate
 from scipy.signal import savgol_filter
-'''
-
-
-update_cloudreport_v2.py
-
-
-
-updated 11/30/2020 by Caleb Harada
-
-
-
-
-Need to apply this code to T_P_3D file before using in RT calculation
-
-** Main part of code is at line 450! **
-
-
-
--Interpolates to uniform altitude grid
-
--Doubles the longitude grid of Mike's cloudreport files. 
-
--NEW: increases vertical resolution of grid ('NTAU_new')
-
-
-
-
-NOTE:
-	
-	Columns of input file must be ordered:
-		lat, lon, level,
-		altitude(m), pressure(bars), temp(k), 
-		EW vel(m/s), NS vel, vert vel,
-		tau_lw[1] ,g0_lw[1], pi0_lw[1],
-		tau_lw[2] ,g0_lw[2], pi0_lw[2],
-		tau_lw[3] ,g0_lw[3], pi0_lw[3],
-		tau_lw[4] ,g0_lw[4], pi0_lw[4]
-
-
-
-'''
-
-
 
 ### ----- INPUTS AND OUTPUTS ----- ###
 
 
 def regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, NTAU, NLON_new, NTAU_new):
     old_file = path + planet_name + '_with_clouds.txt'
-    new_file = '../Planets/'    + planet_name + 'with_clouds.txt'
+    new_file = '../Planets/' + planet_name + '_with_clouds.txt'
 
     smoothing = False
-    NPARAMS = 48
+    NPARAMS = 51
 
     #########################################
     #			END USER INPUTS				#
@@ -432,7 +389,6 @@ def regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, NTAU, NLON
     print ('Old file:', old_file)
     data = np.loadtxt(old_file)
 
-
     data = data.reshape((NLAT, NLON, NTAU, NPARAMS))
     data_new = np.zeros((NLAT, NLON, NTAU_new, NPARAMS))
 
@@ -551,6 +507,11 @@ def regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, NTAU, NLON
         data_new = LInterp_1d(data, data_new, z_grid, 46)
         data_new = LInterp_1d(data, data_new, z_grid, 47)
 
+	    # HAZES
+        data_new = LInterp_1d(data, data_new, z_grid, 48)
+        data_new = LInterp_1d(data, data_new, z_grid, 49)
+        data_new = LInterp_1d(data, data_new, z_grid, 50)
+
 
     # lastly, set all altitude grids equal (to new grid) and add lat, lon, level
 
@@ -568,7 +529,7 @@ def regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, NTAU, NLON
     # double all data, then save to new output file
 
     np.savetxt(new_file, data_new.reshape(NLAT * NLON * NTAU_new, NPARAMS),
-               fmt=' '.join(['%5.2f']*2 + ['%3d']*1 + ['%9.2E']*6 + ['%9.2E']*39 + ['\t']))
+               fmt=' '.join(['%5.2f']*2 + ['%3d']*1 + ['%9.2E']*6 + ['%9.2E']*42 + ['\t']))
     return None
 
 

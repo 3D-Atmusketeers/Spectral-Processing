@@ -10,14 +10,14 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
 
     def df_to_txt(file, df):
         np.savetxt(file, df.values,
-                   fmt=' '.join(['%5.2f']*2 + ['%3d']*1 + ['%9.2E']*6 + ['%9.2E']*39 + ['%5.2f'] + ['\t']))
+                   fmt=' '.join(['%5.2f']*2 + ['%3d']*1 + ['%9.2E']*6 + ['%9.2E']*42 + ['%5.2f'] + ['\t']))
 
-    planet_file = '../Planets/' + planet_name + 'with_clouds.txt'
+    planet_file = '../Planets/' + planet_name + '_with_clouds.txt'
 
 
     for phase in phases:
         for inc in inclinations:
-
+            print ('Planet', planet_file)
             # Sometime w is read in as an object, but it's set to 0 anyway
             df = pd.read_csv(planet_file,
                              delimiter=r"\s+",
@@ -36,7 +36,8 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
                                     'aero_tau_pre_qext_10', 'sw_asym_10', 'sw_pi0_10',
                                     'aero_tau_pre_qext_11', 'sw_asym_11', 'sw_pi0_11',
                                     'aero_tau_pre_qext_12', 'sw_asym_12', 'sw_pi0_12',
-                                    'aero_tau_pre_qext_13', 'sw_asym_13', 'sw_pi0_13'),
+                                    'aero_tau_pre_qext_13', 'sw_asym_13', 'sw_pi0_13',
+                                    'haze_tau_optical_depth_per_bar', 'haze_asym', 'haze_pi0'),
                                     dtype={'lat':float,
                                     'lon':float,
                                     'level':int,
@@ -85,6 +86,9 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
                                     'aero_tau_pre_qext_13':float,
                                     'sw_asym_13':float,
                                     'sw_pi0_13':float,
+                                    'haze_tau_optical_depth_per_bar':float,
+                                    'haze_asym':float,
+                                    'haze_pi0':float,
                                     'incident_frac': float},
                                     low_memory=False,
                                     index_col='lat')
@@ -190,8 +194,8 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
                                                    'aero_tau_pre_qext_9', 'sw_asym_9', 'sw_pi0_9',
                                                    'aero_tau_pre_qext_10', 'sw_asym_10', 'sw_pi0_10',
                                                    'aero_tau_pre_qext_11', 'sw_asym_11', 'sw_pi0_11',
-                                                   'aero_tau_pre_qext_12', 'sw_asym_12', 'sw_pi0_12',
-                                                   'aero_tau_pre_qext_13', 'sw_asym_13', 'sw_pi0_13',
+                                                   'aero_tau_pre_qext_13', 'sw_asym_13', 'sw_pi0_13'
+                                                   'haze_tau_optical_depth_per_bar', 'haze_asym', 'haze_pi0',
                                                    'incident_frac'])
 
 
@@ -212,7 +216,8 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
                               'aero_tau_pre_qext_10', 'sw_asym_10', 'sw_pi0_10',
                               'aero_tau_pre_qext_11', 'sw_asym_11', 'sw_pi0_11',
                               'aero_tau_pre_qext_12', 'sw_asym_12', 'sw_pi0_12',
-                              'aero_tau_pre_qext_13', 'sw_asym_13', 'sw_pi0_13']
+                              'aero_tau_pre_qext_13', 'sw_asym_13', 'sw_pi0_13',
+                              'haze_tau_optical_depth_per_bar', 'haze_asym', 'haze_pi0']
         
                     full_df = df[(df['level'] == level)].reset_index(drop=True)
                     x_full_df = np.array(list(full_df.lon))
@@ -266,7 +271,6 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
                     big_df['aero_tau_pre_qext_2'][big_df['aero_tau_pre_qext_2'] < 0] = 0
                     big_df['aero_tau_pre_qext_3'][big_df['aero_tau_pre_qext_3'] < 0] = 0
                     big_df['aero_tau_pre_qext_4'][big_df['aero_tau_pre_qext_4'] < 0] = 0
-
                     big_df['aero_tau_pre_qext_5'][big_df['aero_tau_pre_qext_5'] < 0] = 0
                     big_df['aero_tau_pre_qext_6'][big_df['aero_tau_pre_qext_6'] < 0] = 0
                     big_df['aero_tau_pre_qext_7'][big_df['aero_tau_pre_qext_7'] < 0] = 0
@@ -276,6 +280,8 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
                     big_df['aero_tau_pre_qext_11'][big_df['aero_tau_pre_qext_11'] < 0] = 0
                     big_df['aero_tau_pre_qext_12'][big_df['aero_tau_pre_qext_12'] < 0] = 0
                     big_df['aero_tau_pre_qext_13'][big_df['aero_tau_pre_qext_13'] < 0] = 0
+                    big_df['haze_tau_optical_depth_per_bar'][big_df['haze_tau_optical_depth_per_bar'] < 0] = 0
+
 
 
                     big_df['sw_asym_1'][big_df['sw_asym_1'] < 0] = 0
@@ -291,6 +297,8 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
                     big_df['sw_asym_11'][big_df['sw_asym_11'] < 0] = 0
                     big_df['sw_asym_12'][big_df['sw_asym_12'] < 0] = 0
                     big_df['sw_asym_13'][big_df['sw_asym_13'] < 0] = 0
+                    big_df['haze_pi0'][big_df['haze_pi0'] < 0] = 0
+
 
                     
                     for param in params:
@@ -328,6 +336,7 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
                                          'aero_tau_pre_qext_11', 'sw_asym_11', 'sw_pi0_11',
                                          'aero_tau_pre_qext_12', 'sw_asym_12', 'sw_pi0_12',
                                          'aero_tau_pre_qext_13', 'sw_asym_13', 'sw_pi0_13',
+                                         'haze_tau_optical_depth_per_bar', 'haze_asym', 'haze_pi0',
                                          'incident_frac']]
                 running_df = running_df.sort_values(by=['lat', 'lon', 'level'], axis=0, ascending=[True, True, True])
 
@@ -365,6 +374,7 @@ def run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT
                                          'aero_tau_pre_qext_11', 'sw_asym_11', 'sw_pi0_11',
                                          'aero_tau_pre_qext_12', 'sw_asym_12', 'sw_pi0_12',
                                          'aero_tau_pre_qext_13', 'sw_asym_13', 'sw_pi0_13',
+                                         'haze_tau_optical_depth_per_bar', 'haze_asym', 'haze_pi0',
                                          'incident_frac']]
                 df = df.sort_values(by=['lat', 'lon', 'level'], axis=0, ascending=[True, True, True])
                 df_to_txt('../Spectra/DATA/init_' + planet_name + '_phase_{}_inc_{}.txt'.format(phase, inc), df)

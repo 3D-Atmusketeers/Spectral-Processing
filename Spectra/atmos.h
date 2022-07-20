@@ -31,7 +31,8 @@ struct Atmos {
     ***aero_tau_pre_qext_10, ***sw_asym_10, ***sw_pi0_10,
     ***aero_tau_pre_qext_11, ***sw_asym_11, ***sw_pi0_11,
     ***aero_tau_pre_qext_12, ***sw_asym_12, ***sw_pi0_12,
-    ***aero_tau_pre_qext_13, ***sw_asym_13, ***sw_pi0_13;
+    ***aero_tau_pre_qext_13, ***sw_asym_13, ***sw_pi0_13,
+    ***aero_tau_haze, ***tau_asym, ***tau_pi0;
   double startlambda, endlambda;
 
 

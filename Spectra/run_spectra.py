@@ -20,7 +20,7 @@ system_obliquity = 0
 
 # I recommend leaving these as is
 # The NLAT and NLON can be changed, but these values work well
-INITIAL_NTAU = 50
+INITIAL_NTAU = 60
 NTAU = 250
 
 # Please don't touch these
@@ -48,14 +48,13 @@ USE_FORT_FILES = True
 # If you change the underlying data files these might need to be changed
 high_res = True
 
-
 # HD209-Table1-No-Clouds-Sponge
 # HD209-Table1-Ya-Clouds-Thin-Nuc-High-TSPD
 
 # These are the planet files that you need to run the code
 # They should be pretty big files, and don't include the .txt with the names here
-planet_name = 'HD209-Dogray-Ya-Clouds-Thic-Nuc'
-runname     = 'HD209-Dogray-Ya-Clouds-Thic-Nuc/Isaac-Tests'
+planet_name = 'GJ1214b-Reduced-Hazes-3000X-Solar'
+runname     = planet_name + '/Planet_Run'
 path        = '../GCM-OUTPUT/'
 
 # These values are used mostly for the fort files
@@ -72,12 +71,12 @@ grav       = float(re.findall(r"[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?", lines
 gasconst   = float(re.findall(r"[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?", lines[5])[0])
 R_PLANET   = float(re.findall(r"[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?", lines[6])[0])
 P_ROT      = ((float(re.findall(r"[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?", lines[8])[0]) / (2.0 * np.pi)) * (24 * 3600)) ** -1.0
-oom        = 6
+oom        = 7
 MTLX       = 0.1
 #MOLEF      = [1.23e-7,4.06e-8,9.35e-7,3.11e-7,4.4e-7, 3.26e-5,1.745e-5,9.56e-9,1.61e-6,2.94e-5,1.99e-6,7.83e-8,1.385e-6]
-MOLEF      = [1.23e-7,0.0,0.0,0.0,4.4e-7,3.26e-5,1.745e-5,9.56e-9,0.0,0.0,1.99e-6,7.83e-8,1.385e-6]
-#MOLEF      = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-aerosol_layers = 50
+#MOLEF      = [1.23e-7,0.0,0.0,0.0,4.4e-7,3.26e-5,1.745e-5,9.56e-9,0.0,0.0,1.99e-6,7.83e-8,1.385e-6]
+MOLEF      = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+aerosol_layers = 0
 
 print ("Gravity =  ",     grav)
 print ("Number of OOM = ", oom)
@@ -96,6 +95,7 @@ if all(i < 1e-20 for i in MOLEF):
 else:
     CLOUDS = 1
 
+CLOUDS = 1
 
 surfp=100 #surface pressure, in bars
 tgr  =3000 #temperature at 100 bars
@@ -248,7 +248,6 @@ print ("Regridded the planet to constant altitude")
 # If you already have the Final planet file creates you can commend out run_grid and double planet file
 run_grid.run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT, NLON, grid_lat_min, grid_lat_max, grid_lon_min, grid_lon_max, ONLY_PHASE)
 """
-
 # Get all the files that you want to run
 input_paths, inclination_strs, phase_strs = get_run_lists(phases, inclinations)
 

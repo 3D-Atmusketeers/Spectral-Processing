@@ -381,6 +381,36 @@ void ReadTP_3D()
           atmos.sw_pi0_13[i][j] = malloc(NTAU*sizeof(double));
       }
   }
+
+
+  atmos.aero_tau_haze = malloc(NLAT*sizeof(double));
+  for(i=0; i<NLAT; i++){
+      atmos.aero_tau_haze[i] = malloc(NLON*sizeof(double));
+      for(j=0; j<NLON; j++){
+          atmos.aero_tau_haze[i][j] = malloc(NTAU*sizeof(double));
+      }
+  }
+  atmos.tau_asym = malloc(NLAT*sizeof(double));
+  for(i=0; i<NLAT; i++){
+      atmos.tau_asym[i] = malloc(NLON*sizeof(double));
+      for(j=0; j<NLON; j++){
+          atmos.tau_asym[i][j] = malloc(NTAU*sizeof(double));
+      }
+  }
+
+  atmos.tau_pi0 = malloc(NLAT*sizeof(double));
+  for(i=0; i<NLAT; i++){
+      atmos.tau_pi0[i] = malloc(NLON*sizeof(double));
+      for(j=0; j<NLON; j++){
+          atmos.tau_pi0[i][j] = malloc(NTAU*sizeof(double));
+      }
+  }
+
+
+
+
+
+
   atmos.incident_frac = malloc(NLAT*sizeof(double));
   for(i=0; i<NLAT; i++){
     atmos.incident_frac[i] = malloc(NLON*sizeof(double));
@@ -388,6 +418,8 @@ void ReadTP_3D()
       atmos.incident_frac[i][j] = malloc(NTAU*sizeof(double));
     }
   }
+
+
 
 
 
@@ -406,7 +438,7 @@ void ReadTP_3D()
                        %le %le %le %le %le %le %le %le %le %le %le %le\
                        %le %le %le %le %le %le %le %le %le %le %le %le\
                        %le %le %le %le %le %le %le %le %le %le %le %le\
-                       %le %le %le",
+                       %le %le %le %le %le %le",
                        &atmos.lat[i], &atmos.lon[j], &num, &atmos.alt[k], &atmos.P_3d[i][j][k],
                        &atmos.T_3d[i][j][k], &atmos.vel_ew[i][j][k], &atmos.vel_ns[i][j][k], &atmos.vel_ve[i][j][k],
                        &atmos.aero_tau_pre_qext_1[i][j][k], &atmos.sw_asym_1[i][j][k], &atmos.sw_pi0_1[i][j][k],
@@ -422,6 +454,7 @@ void ReadTP_3D()
                        &atmos.aero_tau_pre_qext_11[i][j][k], &atmos.sw_asym_11[i][j][k], &atmos.sw_pi0_11[i][j][k],
                        &atmos.aero_tau_pre_qext_12[i][j][k], &atmos.sw_asym_12[i][j][k], &atmos.sw_pi0_12[i][j][k],
                        &atmos.aero_tau_pre_qext_13[i][j][k], &atmos.sw_asym_13[i][j][k], &atmos.sw_pi0_13[i][j][k],
+                       &atmos.aero_tau_haze[i][j][k], &atmos.tau_asym[i][j][k], &atmos.tau_pi0[i][j][k],
                        &atmos.incident_frac[i][j][k]));
             }
 
@@ -430,6 +463,7 @@ void ReadTP_3D()
             for(k=NTAU; k<NTAU; k++)
             {
                 if (fscanf(file, "%le %le %le\
+                                  %le %le %le\
                                   %le %le %le\
                                   %le %le %le\
                                   %le %le %le\
@@ -454,6 +488,7 @@ void ReadTP_3D()
                                  &dum, &dum, &dum,
                                  &dum, &dum, &dum,
                                  &dum, &dum, &dum,
+                                 &dum, &dum, &dum,
                                  &dum));
             }
         }
@@ -462,6 +497,7 @@ void ReadTP_3D()
 
 
     printf("Some of the values from the input file %le %le %le %le %le %le %le %le %le\n\
+           %le %le %le\n\
            %le %le %le\n\
            %le %le %le\n\
            %le %le %le\n\
@@ -488,8 +524,10 @@ void ReadTP_3D()
            atmos.aero_tau_pre_qext_4[0][0][0],
            atmos.sw_asym_4[0][0][0],
            atmos.sw_pi0_4[0][0][0],
-           atmos.incident_frac[0][0][0]);
-    
+           atmos.aero_tau_pre_qext_4[0][0][0],
+           atmos.aero_tau_haze[0][0][0],
+           atmos.tau_asym[0][0][0],
+           atmos.tau_pi0[0][0][0]);
     fclose(file);
     
 }
