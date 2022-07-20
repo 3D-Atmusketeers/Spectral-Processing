@@ -64,7 +64,7 @@ int RT_Emit_3D(double PHASE)
     double R, test, a, b, *lat_rad, kappa_nu_plus_e, kappa_nu_plus_w,
     kappa_nu_minus_e, kappa_nu_minus_w, t_lon_plus_e, t_lon_plus_w,
     t_lon_minus_e, t_lon_minus_w, p_lon_plus_e, p_lon_plus_w,
-    p_lon_minus_e, p_lon_minus_w, temperature, pressure, kappa_nu, *lon_rad,
+    p_lon_minus_e, p_lon_minus_w, temperature, pressure, kappa_nu, *lon_rad, delta_pressure_pa,
     aero_kappa_pre_qext_interp_1,
     aero_kappa_pre_qext_interp_2,
     aero_kappa_pre_qext_interp_3,
@@ -1296,6 +1296,18 @@ int RT_Emit_3D(double PHASE)
                         dtau_em[l][m][j] = kappa_nu * dl[l][m][j];
                         pressure_array[l][m][j] = pressure;
 
+                        if (j == 0)
+                        {
+                            delta_pressure_pa = pressure * 1e-5;
+                        }
+                        else
+                        {
+                            delta_pressure_pa = (pressure_array[l][m][j] - pressure_array[l][m][j-1]) * 1e-5;
+                        }
+
+                        printf("%d %le %le\n", j, delta_pressure_pa, pressure);
+
+
                         if(CLOUDS==1)
                         {
                             // Find the nearest pressure index //
@@ -1356,7 +1368,8 @@ int RT_Emit_3D(double PHASE)
                             aero_kappa_11 = aero_kappa_pre_qext_interp_11    * CaSiO4_wav_qext[pressure_index][wavelength_index];
                             aero_kappa_12 = aero_kappa_pre_qext_interp_12    * CaTiO3_wav_qext[pressure_index][wavelength_index];
                             aero_kappa_13 = aero_kappa_pre_qext_interp_13    * Al2O3_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_haze = aero_kappa_pre_tau_haze_interp * haze_wav_tau[haze_pressure_index][wavelength_index] * (pressure * 1.0e-5);
+                            aero_kappa_haze = aero_kappa_pre_tau_haze_interp * haze_wav_tau[haze_pressure_index][wavelength_index] * delta_pressure_pa;
+
 
                             // So all the cloud wavelength values are not wavelength dependant in the output files
                             // This takes the optical depth and adds the wavelength and particle size dependant scattering
