@@ -10,8 +10,8 @@ Defines input values and files for 3-D emission spectra
 /* I/O SETTINGS. */
 
 /* File names */
-#define OUTPUT_PREFIX "OUT/Spec_0_GJ1214b-Reduced-Hazes-3000X-Solar_phase_0.0_inc_0.00.00.0"      /* output name */
-#define T_P_3D_FILE "DATA/init_GJ1214b-Reduced-Hazes-3000X-Solar_phase_0.0_inc_0.0.txt"         /* input file */
+#define OUTPUT_PREFIX "OUT/Spec_0_GJ1214b-Hazes-0001X-Solar_phase_60.0_inc_0.00.00.0"      /* output name */
+#define T_P_3D_FILE "DATA/init_GJ1214b-Hazes-0001X-Solar_phase_60.0_inc_0.0.txt"         /* input file */
 
 /* Output settings */
 #define N_PHASE 1                          /* Number of phases [96 max; lon grid in increments of 3.75] */
@@ -27,20 +27,20 @@ Defines input values and files for 3-D emission spectra
 #define NLAMBDA 2598                       /* Number of wavelength points in grid [4616/2598]   */
 
 // This is the Npressure for low res
-#define NPRESSURE 17    /* Number of pressure points in grid   [13/17]   */
+#define NPRESSURE 13    /* Number of pressure points in grid   [13/17]   */
 
 #define W0_VAL 0.0
 #define G0_VAL 0.0
 
 /* Planet parameters */
 #define INPUT_INCLINATION 0.0  /* Planet inclination in radians            */
-#define INPUT_PHASE 0.0              /* Planet inclination in degrees           */
+#define INPUT_PHASE 60.0              /* Planet inclination in degrees           */
 #define G 10.65                   /* Planet surface gravity                 */
 
 #define R_PLANET 17469300.0                 /* Planet radius at base of atmosphere      */
-#define ORB_SEP 7031200000.0                  // This is some distance
-#define STELLAR_TEMP 6071                // Stellar Blackbody temperature
-#define R_STAR 836927100.0                    /* Stellar radius                         */
+#define ORB_SEP 2139280000.0                  // This is some distance
+#define STELLAR_TEMP 3021                // Stellar Blackbody temperature
+#define R_STAR 139140000.0                    /* Stellar radius                         */
 #define P_ROT  1.4804043752619522                        /* Rotation period in days (= P_ORB for tidally locked planet)    */
 
 #define R_VEL 0.0                          /* Radial Velocity                        */
@@ -91,14 +91,23 @@ Defines input values and files for 3-D emission spectra
 #define QE_Al2O3 0.12
 
 /* Opacities for spectra */
-#define CHEM_FILE   "DATA/eos_solar_doppler.dat"
-#define CH4_FILE    "DATA/opacCH4_hires.dat"
-#define CO2_FILE    "DATA/opacCO2_hires.dat"
-#define CO_FILE     "DATA/opacCO_hires.dat"
-#define H2O_FILE    "DATA/opacH2O_hires.dat"
-#define NH3_FILE    "DATA/opacNH3_hires.dat"
-#define O2_FILE     "DATA/opacO2_hires.dat"
-#define O3_FILE     "DATA/opacO3_hires.dat"
+#define CHEM_FILE   "DATA/eos_solar_doppler_2016_cond.dat"
+
+
+
+
+
+
+#define CH4_FILE    "DATA/opacCH4.dat"
+#define CO2_FILE    "DATA/opacCO2.dat"
+#define CO_FILE     "DATA/opacCO.dat"
+#define H2O_FILE    "DATA/opacH2O.dat"
+#define NH3_FILE    "DATA/opacNH3.dat"
+
+
+
+//#define O2_FILE     "DATA/opacO2.dat"
+//#define O3_FILE     "DATA/opacO3.dat"
 
 #endif /* !__INPUT_H__ */
 

@@ -46,14 +46,15 @@ USE_FORT_FILES = True
 # There are low resolution spectra and high resolution spectra that can be created
 # There are somethings that need to be changed in the template inputs file to make this happen
 # If you change the underlying data files these might need to be changed
-high_res = True
+high_res = False
+opacity_files = 'GJ1214b'
 
 # HD209-Table1-No-Clouds-Sponge
 # HD209-Table1-Ya-Clouds-Thin-Nuc-High-TSPD
 
 # These are the planet files that you need to run the code
 # They should be pretty big files, and don't include the .txt with the names here
-planet_name = 'GJ1214b-Reduced-Hazes-3000X-Solar'
+planet_name = 'GJ1214b-Hazes-0001X-Solar'
 runname     = planet_name + '/Planet_Run'
 path        = '../GCM-OUTPUT/'
 
@@ -94,14 +95,14 @@ if all(i < 1e-20 for i in MOLEF):
     CLOUDS = 0
 else:
     CLOUDS = 1
-
 CLOUDS = 1
 
+
 surfp=100 #surface pressure, in bars
-tgr  =3000 #temperature at 100 bars
-ORB_SEP      = 0.047 * 1.496e11
-STELLAR_TEMP = 6071
-R_STAR       = 1.203 * 6.957e8
+tgr  = 1500 #temperature at 100 bars
+ORB_SEP      = 0.0143 * 1.496e11
+STELLAR_TEMP = 3021
+R_STAR       = 0.2 * 6.957e8
 
 print ("Surface Pressure = ",surfp)
 print ("Ground  Temperature = ",tgr)
@@ -187,7 +188,7 @@ def run_exo(input_paths, inclination_strs, phase_strs, doppler_val):
         
 
         # This is the part that changes the low-res vs high res
-        if high_res == True:
+        if opacity_files == 'high_resolution':
             filedata = filedata.replace("<<num_pressure_points>>", "17")
             filedata = filedata.replace("<<num_temperature_points>>", "30")
             filedata = filedata.replace("<<num_wavelength_points>>", "2598")
@@ -200,7 +201,7 @@ def run_exo(input_paths, inclination_strs, phase_strs, doppler_val):
             filedata = filedata.replace("<<NH3_FILE>>",  "\"DATA/opacNH3_hires.dat\"")
             filedata = filedata.replace("<<O2_FILE >>",  "\"DATA/opacO2_hires.dat\"")
             filedata = filedata.replace("<<O3_FILE>>",   "\"DATA/opacO3_hires.dat\"")
-        else:
+        else if opacity_files == 'low_resoltion':
             filedata = filedata.replace("<<num_pressure_points>>", "13")
             filedata = filedata.replace("<<num_temperature_points>>", "30")
             filedata = filedata.replace("<<num_wavelength_points>>", "2598")
@@ -213,6 +214,19 @@ def run_exo(input_paths, inclination_strs, phase_strs, doppler_val):
             filedata = filedata.replace("<<NH3_FILE>>",  "\"DATA/opacNH3.dat\"")
             filedata = filedata.replace("<<O2_FILE >>",  "\"DATA/opacO2.dat\"")
             filedata = filedata.replace("<<O3_FILE>>",   "\"DATA/opacO3.dat\"")
+        else if opacity_files == 'GJ1214b':
+            filedata = filedata.replace("<<num_pressure_points>>", "13")
+            filedata = filedata.replace("<<num_temperature_points>>", "30")
+            filedata = filedata.replace("<<num_wavelength_points>>", "2598")
+
+            filedata = filedata.replace("<<CHEM_FILE>>", "\"DATA/eos_solar_doppler_2016_cond.dat\"")
+            filedata = filedata.replace("<<CH4_FILE>>",  "\"DATA/GJ1214b-opacCH4.dat\"")
+            filedata = filedata.replace("<<CO2_FILE>>",  "\"DATA/GJ1214b-opacCO2.dat\"")
+            filedata = filedata.replace("<<CO_FILE>>",   "\"DATA/GJ1214b-opacCO.dat\"")
+            filedata = filedata.replace("<<H2O_FILE>>",  "\"DATA/GJ1214b-opacH2O.dat\"")
+            filedata = filedata.replace("<<NH3_FILE>>",  "\"DATA/GJ1214b-opacNH3.dat\"")
+            filedata = filedata.replace("<<O2_FILE >>",  "\"DATA/GJ1214b-opacO2.dat\"")
+            filedata = filedata.replace("<<O3_FILE>>",   "\"DATA/GJ1214b-opacO3.dat\"")
 
         # Write the file out again
         with open(inputs_file, 'w') as file:
@@ -230,7 +244,6 @@ input_paths = []
 output_paths = []
 inclination_strs = []
 phase_strs = []
-
 """
 # Convert the fort files to the correct format
 if USE_FORT_FILES == True:

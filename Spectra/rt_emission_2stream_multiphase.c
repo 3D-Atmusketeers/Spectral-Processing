@@ -1298,15 +1298,13 @@ int RT_Emit_3D(double PHASE)
 
                         if (j == 0)
                         {
-                            delta_pressure_pa = pressure * 1e-5;
+                            //delta_pressure_pa = pressure * 1e-5;
+                            delta_pressure_pa = (pressure - (pressure_array[l][m][j+1] - pressure_array[l][m][j])) * 1e-5;
                         }
                         else
                         {
                             delta_pressure_pa = (pressure_array[l][m][j] - pressure_array[l][m][j-1]) * 1e-5;
                         }
-
-                        printf("%d %le %le\n", j, delta_pressure_pa, pressure);
-
 
                         if(CLOUDS==1)
                         {
@@ -1378,6 +1376,7 @@ int RT_Emit_3D(double PHASE)
                                                 aero_kappa_5 + aero_kappa_6 + aero_kappa_7 + aero_kappa_8 + \
                                                 aero_kappa_9 + aero_kappa_10 + aero_kappa_11 + aero_kappa_12 + \
                                                 aero_kappa_13 + aero_kappa_haze;
+
 
                             //if (dtau_em[l][m][j] < 1e-5 || total_cloud_and_haze_kappa < 1e-5 || kappa_nu < 1e-10 || dl[l][m][j] < 1e-10)
                             //if (dtau_em[l][m][j] < 1e-50 || total_cloud_and_haze_kappa < 1e-50 || kappa_nu < 1e-50 || dl[l][m][j] < 1e-50)
