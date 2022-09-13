@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#include <rpc/types.h>
+#include "rpctypes.h"
 #include <stdlib.h>
 #include "include.h"
 

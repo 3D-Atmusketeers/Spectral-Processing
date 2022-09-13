@@ -119,25 +119,14 @@ int RT_Emit_3D(double PHASE)
     7.543e+04, 1.099e+05, 1.600e+05, 2.330e+05, 3.393e+05, 4.942e+05, \
     7.197e+05, 1.048e+06, 1.526e+06, 2.223e+06, 3.237e+06, 4.715e+06, 6.866e+06, 1.000e+07};
 
-    double haze_pressure_array_pascals[50] = {
-                                   1.259e-01, 1.825e-01, 2.645e-01, 3.834e-01, 5.558e-01, 8.056e-01, 1.168e+00,
-                                   1.693e+00, 2.454e+00, 3.556e+00, 5.155e+00, 7.473e+00, 1.083e+01, 1.570e+01, \
-                                   2.276e+01, 3.299e+01, 4.782e+01, 6.931e+01, 1.005e+02, 1.456e+02, 2.111e+02, \
-                                   3.060e+02, 4.435e+02, 6.429e+02, 9.319e+02, 1.351e+03, 1.958e+03, 2.838e+03, \
-                                   4.114e+03, 5.964e+03, 8.644e+03, 1.253e+04, 1.816e+04, 2.633e+04, 3.816e+04, \
-                                   5.532e+04, 8.018e+04, 1.162e+05, 1.685e+05, 2.442e+05, 3.540e+05, 5.131e+05, \
-                                   7.438e+05, 1.078e+06, 1.563e+06, 2.265e+06, 3.283e+06, 4.759e+06, 6.899e+06, \
-                                   1.000e+07};
-
-    double wavelengths_in_microns[50] = {3.000e-01, 3.235e-01, 3.489e-01, 3.762e-01, 4.057e-01, 4.375e-01, \
-                                         4.718e-01, 5.087e-01, 5.486e-01, 5.916e-01, 6.379e-01, 6.879e-01, \
-                                         7.418e-01, 8.000e-01, 8.627e-01, 9.303e-01, 1.003e+00, 1.082e+00, \
-                                         1.167e+00, 1.258e+00, 1.357e+00, 1.463e+00, 1.578e+00, 1.701e+00, \
-                                         1.834e+00, 1.978e+00, 2.133e+00, 2.300e+00, 2.481e+00, 2.675e+00, \
-                                         2.885e+00, 3.111e+00, 3.355e+00, 3.617e+00, 3.901e+00, 4.207e+00, \
-                                         4.536e+00, 4.892e+00, 5.275e+00, 5.688e+00, 6.134e+00, 6.615e+00, \
-                                         7.133e+00, 7.692e+00, 8.295e+00, 8.945e+00, 9.646e+00, 1.040e+01, \
-                                         1.122e+01, 1.210e+01};
+    double wavelengths_in_microns[50] = {3.000e-01, 3.269e-01, 3.563e-01, 3.883e-01, 4.232e-01, 4.612e-01, 5.026e-01,
+                                         5.477e-01, 5.969e-01, 6.505e-01, 7.089e-01, 7.726e-01, 8.419e-01, 9.175e-01,
+                                         9.999e-01, 1.090e+00, 1.188e+00, 1.294e+00, 1.410e+00, 1.537e+00, 1.675e+00,
+                                         1.826e+00, 1.989e+00, 2.168e+00, 2.363e+00, 2.575e+00, 2.806e+00, 3.058e+00,
+                                         3.333e+00, 3.632e+00, 3.958e+00, 4.314e+00, 4.701e+00, 5.123e+00, 5.583e+00,
+                                         6.085e+00, 6.631e+00, 7.227e+00, 7.876e+00, 8.583e+00, 9.353e+00, 1.019e+01,
+                                         1.111e+01, 1.211e+01, 1.319e+01, 1.438e+01, 1.567e+01, 1.708e+01, 1.861e+01, 
+                                         2.028e+01};
 
     int x=0, y=0, num_wavelength_points=0, num_pressure_points=0;
     double input_val=0;
@@ -487,7 +476,7 @@ int RT_Emit_3D(double PHASE)
     }
 
 
-    int kmin, good_l, good_m, good_val, pressure_index, wavelength_index, haze_pressure_index;
+    int kmin, good_l, good_m, good_val, pressure_index, wavelength_index;
     double incident_frac;
     double ***pi0_tot, ***asym_tot;
 
@@ -1104,7 +1093,7 @@ int RT_Emit_3D(double PHASE)
 
     for(i=0; i<NLAMBDA; i++)
     {
-        // Find the nearest wavelength  index //
+        // Find the nearest wavelength index for the clouds//
         wavelength_index = 0;
         if (atmos.lambda[i] * 1e6 > wavelengths_in_microns[num_wavelength_points - 1])
         {
@@ -1281,14 +1270,6 @@ int RT_Emit_3D(double PHASE)
                                                   opac.kappa[i][h+1][g],
                                                   opac.kappa[i][h+1][g+1],
                                                   temperature, pressure);
-
-                                //kappa_nu = lint2D(opac.T[g], opac.T[g+1],
-                                //                  opac.P[h], opac.P[h+1],
-                                //                  opac.kappa[100][h][g],
-                                //                  opac.kappa[100][h][g+1],
-                                //                  opac.kappa[100][h+1][g],
-                                //                  opac.kappa[100][h+1][g+1],
-                                //                  temperature, pressure);
                             }
                         }
 
@@ -1324,19 +1305,6 @@ int RT_Emit_3D(double PHASE)
 
 
 
-                            haze_pressure_index = 0;
-                            if (pressure > haze_pressure_array_pascals[num_pressure_points-1])
-                            {
-                                haze_pressure_index = num_pressure_points-1;
-                            }
-                            else
-                            {
-                                while (pressure > haze_pressure_array_pascals[haze_pressure_index])
-                                {
-                                    haze_pressure_index = haze_pressure_index+1;
-                                }
-                            }
-
                             aero_kappa_pre_qext_interp_1 = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_1[o][c][j], aero_kappa_pre_qext_1[o][c+1][j], aero_kappa_pre_qext_1[o+1][c][j], aero_kappa_pre_qext_1[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
                             aero_kappa_pre_qext_interp_2 = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_2[o][c][j], aero_kappa_pre_qext_2[o][c+1][j], aero_kappa_pre_qext_2[o+1][c][j], aero_kappa_pre_qext_2[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
                             aero_kappa_pre_qext_interp_3 = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_3[o][c][j], aero_kappa_pre_qext_3[o][c+1][j], aero_kappa_pre_qext_3[o+1][c][j], aero_kappa_pre_qext_3[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
@@ -1366,7 +1334,7 @@ int RT_Emit_3D(double PHASE)
                             aero_kappa_11 = aero_kappa_pre_qext_interp_11    * CaSiO4_wav_qext[pressure_index][wavelength_index];
                             aero_kappa_12 = aero_kappa_pre_qext_interp_12    * CaTiO3_wav_qext[pressure_index][wavelength_index];
                             aero_kappa_13 = aero_kappa_pre_qext_interp_13    * Al2O3_wav_qext[pressure_index][wavelength_index];
-                            aero_kappa_haze = aero_kappa_pre_tau_haze_interp * haze_wav_tau[haze_pressure_index][wavelength_index] * delta_pressure_pa;
+                            aero_kappa_haze = aero_kappa_pre_tau_haze_interp * haze_wav_tau[pressure_index][wavelength_index] * delta_pressure_pa;
 
 
                             // So all the cloud wavelength values are not wavelength dependant in the output files
@@ -1420,6 +1388,7 @@ int RT_Emit_3D(double PHASE)
                                                      weight_12 * CaTiO3_wav_pi0[pressure_index][wavelength_index]  + \
                                                      weight_13 * Al2O3_wav_pi0[pressure_index][wavelength_index]   + \
                                                      weight_haze * haze_wav_pi0[pressure_index][wavelength_index]);
+
 
                                 asym_tot[l][m][j] = (weight_1  * KCl_wav_gg[pressure_index][wavelength_index]       + \
                                                      weight_2  * ZnS_wav_gg[pressure_index][wavelength_index]       + \
@@ -1498,6 +1467,15 @@ int RT_Emit_3D(double PHASE)
                         reflected_intensity[l][m] = 0;
                     }
 
+                    //printf("%d %d %d %.3e %.3e %.3e %.3e\n", j, l, m, pi0_tot[l][m], asym_tot[l][m], temperature_3d[l][m], tau_em[l][m]);
+
+                    //for (j = kmin; j<NTAU; j++)
+                    //{
+                    //    printf("%d %d %d %.3e %.3e %.3e %.3e\n",  j, l, m, pi0_tot[l][m][j], asym_tot[l][m][j], temperature_3d[l][m][j], tau_em[l][m][j]);
+                    //}
+
+
+
                     if (atmos.incident_frac[l][m][NTAU-10] < 0)
                     {
                         atmos.incident_frac[l][m][NTAU-10] = 0;
@@ -1510,7 +1488,6 @@ int RT_Emit_3D(double PHASE)
                                    CLIGHT / atmos.lambda[i], \
                                    CLIGHT / atmos.lambda[i] - CLIGHT / atmos.lambda[i+1], \
                                    atmos.incident_frac[l][m][NTAU-10], dtau_em[l][m], intensity_vals);
-
 
                         // The first index is the thermal intensity, the second is the reflected light
                         intensity[l][m] = intensity_vals[0] + intensity_vals[1];

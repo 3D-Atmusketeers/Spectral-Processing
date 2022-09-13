@@ -20,7 +20,7 @@ system_obliquity = 0
 
 # I recommend leaving these as is
 # The NLAT and NLON can be changed, but these values work well
-INITIAL_NTAU = 60
+INITIAL_NTAU = 75
 NTAU = 250
 
 # Please don't touch these
@@ -46,15 +46,14 @@ USE_FORT_FILES = True
 # There are low resolution spectra and high resolution spectra that can be created
 # There are somethings that need to be changed in the template inputs file to make this happen
 # If you change the underlying data files these might need to be changed
-high_res = False
-opacity_files = 'GJ1214b'
+opacity_files = 'high_resolution'
 
 # HD209-Table1-No-Clouds-Sponge
 # HD209-Table1-Ya-Clouds-Thin-Nuc-High-TSPD
 
 # These are the planet files that you need to run the code
 # They should be pretty big files, and don't include the .txt with the names here
-planet_name = 'GJ1214b-Hazes-0001X-Solar'
+planet_name = 'Clear-0001X-Solar'
 runname     = planet_name + '/Planet_Run'
 path        = '../GCM-OUTPUT/'
 
@@ -63,6 +62,7 @@ path        = '../GCM-OUTPUT/'
 # So make sure all the constants are set correctly
 # Eventually these should be pulled from the fort.7 file
 # Alas, I am lazy, so you have to do it by hand
+
 
 with open(path + runname + '/fort.7') as f:
     lines = f.readlines()
@@ -95,7 +95,6 @@ if all(i < 1e-20 for i in MOLEF):
     CLOUDS = 0
 else:
     CLOUDS = 1
-CLOUDS = 1
 
 
 surfp=100 #surface pressure, in bars
@@ -201,7 +200,7 @@ def run_exo(input_paths, inclination_strs, phase_strs, doppler_val):
             filedata = filedata.replace("<<NH3_FILE>>",  "\"DATA/opacNH3_hires.dat\"")
             filedata = filedata.replace("<<O2_FILE >>",  "\"DATA/opacO2_hires.dat\"")
             filedata = filedata.replace("<<O3_FILE>>",   "\"DATA/opacO3_hires.dat\"")
-        else if opacity_files == 'low_resoltion':
+        elif opacity_files == 'low_resoltion':
             filedata = filedata.replace("<<num_pressure_points>>", "13")
             filedata = filedata.replace("<<num_temperature_points>>", "30")
             filedata = filedata.replace("<<num_wavelength_points>>", "2598")
@@ -214,7 +213,7 @@ def run_exo(input_paths, inclination_strs, phase_strs, doppler_val):
             filedata = filedata.replace("<<NH3_FILE>>",  "\"DATA/opacNH3.dat\"")
             filedata = filedata.replace("<<O2_FILE >>",  "\"DATA/opacO2.dat\"")
             filedata = filedata.replace("<<O3_FILE>>",   "\"DATA/opacO3.dat\"")
-        else if opacity_files == 'GJ1214b':
+        elif opacity_files == 'GJ1214b':
             filedata = filedata.replace("<<num_pressure_points>>", "13")
             filedata = filedata.replace("<<num_temperature_points>>", "30")
             filedata = filedata.replace("<<num_wavelength_points>>", "2598")
@@ -244,7 +243,8 @@ input_paths = []
 output_paths = []
 inclination_strs = []
 phase_strs = []
-"""
+
+
 # Convert the fort files to the correct format
 if USE_FORT_FILES == True:
     convert_fort_files.convert_to_correct_format(runname, planet_name, INITIAL_NTAU, surfp, oom, tgr, grav, gasconst)
@@ -260,7 +260,7 @@ print ("Regridded the planet to constant altitude")
 
 # If you already have the Final planet file creates you can commend out run_grid and double planet file
 run_grid.run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT, NLON, grid_lat_min, grid_lat_max, grid_lon_min, grid_lon_max, ONLY_PHASE)
-"""
+
 # Get all the files that you want to run
 input_paths, inclination_strs, phase_strs = get_run_lists(phases, inclinations)
 

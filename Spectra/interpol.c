@@ -7,7 +7,7 @@ Last modified:
 
 #include <stdio.h>
 #include <math.h>
-#include <rpc/types.h>
+#include "rpctypes.h"
 
 /* --- Global variables ------------------------------------------ */
 
