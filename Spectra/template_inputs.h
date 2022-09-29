@@ -42,6 +42,8 @@ Defines input values and files for 3-D emission spectra
 #define STELLAR_TEMP <<STELLAR_TEMP>>                // Stellar Blackbody temperature
 #define R_STAR <<R_STAR>>                    /* Stellar radius                         */
 #define P_ROT  <<P_ROT>>                        /* Rotation period in days (= P_ORB for tidally locked planet)    */
+#define HAZE_TYPE <<HAZE_TYPE>>
+#define HAZES <<HAZES>>
 
 #define R_VEL 0.0                          /* Radial Velocity                        */
 #define MU 2.36                            /* Mean molecular weight                  */

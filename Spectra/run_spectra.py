@@ -20,7 +20,7 @@ system_obliquity = 0
 
 # I recommend leaving these as is
 # The NLAT and NLON can be changed, but these values work well
-INITIAL_NTAU = 75
+INITIAL_NTAU = 50
 NTAU = 250
 
 # Please don't touch these
@@ -48,12 +48,24 @@ USE_FORT_FILES = True
 # If you change the underlying data files these might need to be changed
 opacity_files = 'high_resolution'
 
+
+# Are there photochemical hazes?
+HAZE_TYPE = 'None'
+# HAZE_TYPE = 'soot' # 'soot-2xpi0' 'tholin', 'sulfur'
+
+if (HAZE_TYPE == 'soot' or HAZE_TYPE == 'soot-2xpi0' or HAZE_TYPE == 'tholin' or HAZE_TYPE == 'sulfur'):
+    HAZES = True
+else:
+    HAZES = False
+
+HAZES = False
+
 # HD209-Table1-No-Clouds-Sponge
 # HD209-Table1-Ya-Clouds-Thin-Nuc-High-TSPD
 
 # These are the planet files that you need to run the code
 # They should be pretty big files, and don't include the .txt with the names here
-planet_name = 'Clear-0001X-Solar'
+planet_name = 'HD189-PICKET'
 runname     = planet_name + '/Planet_Run'
 path        = '../GCM-OUTPUT/'
 
@@ -91,17 +103,17 @@ print ("KCl, ZnS, Na2S, MnS, Cr, SiO2, Mg2SiO4, VO, Ni, Fe, Ca2SiO4, CaTiO3, Al2
 # Whether  there are clouds
 # 0 is no clouds, 1 is clouds
 # This is also important for filling in the correct number of 0s for the input files
-if all(i < 1e-20 for i in MOLEF):
-    CLOUDS = 0
-else:
+if any(i > 1e-20 for i in MOLEF):
     CLOUDS = 1
+else:
+    CLOUDS = 0
 
 
 surfp=100 #surface pressure, in bars
-tgr  = 1500 #temperature at 100 bars
-ORB_SEP      = 0.0143 * 1.496e11
-STELLAR_TEMP = 3021
-R_STAR       = 0.2 * 6.957e8
+tgr  = 3000 #temperature at 100 bars
+ORB_SEP      = 0.047 * 1.496e11
+STELLAR_TEMP = 6071
+R_STAR       = 1.19 * 6.957e8
 
 print ("Surface Pressure = ",surfp)
 print ("Ground  Temperature = ",tgr)
@@ -184,7 +196,12 @@ def run_exo(input_paths, inclination_strs, phase_strs, doppler_val):
         filedata = filedata.replace("<<STELLAR_TEMP>>", str(STELLAR_TEMP))
         filedata = filedata.replace("<<R_STAR>>",       str(R_STAR))
         filedata = filedata.replace("<<P_ROT>>",        str(P_ROT))
-        
+
+        filedata = filedata.replace("<<HAZE_TYPE>>", "\"" + HAZE_TYPE +"\"")
+        if (HAZES == True):
+            filedata = filedata.replace("<<HAZES>>", str(1))
+        else:
+            filedata = filedata.replace("<<HAZES>>", str(0))
 
         # This is the part that changes the low-res vs high res
         if opacity_files == 'high_resolution':
@@ -244,7 +261,7 @@ output_paths = []
 inclination_strs = []
 phase_strs = []
 
-
+"""
 # Convert the fort files to the correct format
 if USE_FORT_FILES == True:
     convert_fort_files.convert_to_correct_format(runname, planet_name, INITIAL_NTAU, surfp, oom, tgr, grav, gasconst)
@@ -252,7 +269,8 @@ if USE_FORT_FILES == True:
 else:
     pass
 
-add_clouds.add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOLEF, aerosol_layers, INITIAL_NTAU, gasconst)
+add_clouds.add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOLEF,
+                                    aerosol_layers, INITIAL_NTAU, gasconst, HAZE_TYPE, HAZES)
 
 # Regrid the file to constant altitude and the correct number of layers
 altitude_regridding.regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, INITIAL_NTAU, NLON, NTAU)
@@ -260,6 +278,7 @@ print ("Regridded the planet to constant altitude")
 
 # If you already have the Final planet file creates you can commend out run_grid and double planet file
 run_grid.run_all_grid(planet_name, phases, inclinations, system_obliquity, NTAU, NLAT, NLON, grid_lat_min, grid_lat_max, grid_lon_min, grid_lon_max, ONLY_PHASE)
+"""
 
 # Get all the files that you want to run
 input_paths, inclination_strs, phase_strs = get_run_lists(phases, inclinations)

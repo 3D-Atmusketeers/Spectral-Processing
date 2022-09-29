@@ -10,8 +10,8 @@ Defines input values and files for 3-D emission spectra
 /* I/O SETTINGS. */
 
 /* File names */
-#define OUTPUT_PREFIX "OUT/Spec_0_Clear-0001X-Solar_phase_0.0_inc_0.00.00.0"      /* output name */
-#define T_P_3D_FILE "DATA/init_Clear-0001X-Solar_phase_0.0_inc_0.0.txt"         /* input file */
+#define OUTPUT_PREFIX "OUT/Spec_0_HD189-PICKET_phase_0.0_inc_0.00.00.0"      /* output name */
+#define T_P_3D_FILE "DATA/init_HD189-PICKET_phase_0.0_inc_0.0.txt"         /* input file */
 
 /* Output settings */
 #define N_PHASE 1                          /* Number of phases [96 max; lon grid in increments of 3.75] */
@@ -35,13 +35,15 @@ Defines input values and files for 3-D emission spectra
 /* Planet parameters */
 #define INPUT_INCLINATION 0.0  /* Planet inclination in radians            */
 #define INPUT_PHASE 0.0              /* Planet inclination in degrees           */
-#define G 8.98                   /* Planet surface gravity                 */
+#define G 21.2                   /* Planet surface gravity                 */
 
-#define R_PLANET 98531990.0                 /* Planet radius at base of atmosphere      */
-#define ORB_SEP 2139280000.0                  // This is some distance
-#define STELLAR_TEMP 3021                // Stellar Blackbody temperature
-#define R_STAR 139140000.0                    /* Stellar radius                         */
-#define P_ROT  3.5250016076515585                        /* Rotation period in days (= P_ORB for tidally locked planet)    */
+#define R_PLANET 8.0                 /* Planet radius at base of atmosphere      */
+#define ORB_SEP 7031200000.0                  // This is some distance
+#define STELLAR_TEMP 6071                // Stellar Blackbody temperature
+#define R_STAR 827883000.0                    /* Stellar radius                         */
+#define P_ROT  2.2191654612886906                        /* Rotation period in days (= P_ORB for tidally locked planet)    */
+#define HAZE_TYPE "None"
+#define HAZES 0
 
 #define R_VEL 0.0                          /* Radial Velocity                        */
 #define MU 2.36                            /* Mean molecular weight                  */
