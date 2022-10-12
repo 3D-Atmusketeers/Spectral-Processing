@@ -455,11 +455,12 @@ void ReadTP_3D()
                        &atmos.aero_tau_pre_qext_12[i][j][k], &atmos.sw_asym_12[i][j][k], &atmos.sw_pi0_12[i][j][k],
                        &atmos.aero_tau_pre_qext_13[i][j][k], &atmos.sw_asym_13[i][j][k], &atmos.sw_pi0_13[i][j][k],
                        &atmos.aero_tau_haze[i][j][k], &atmos.tau_asym[i][j][k], &atmos.tau_pi0[i][j][k],
-                       &atmos.incident_frac[i][j][k]));
+                       &atmos.incident_frac[i][j][k]))
+                       ;
             }
 
 
-            
+
             for(k=NTAU; k<NTAU; k++)
             {
                 if (fscanf(file, "%le %le %le\
@@ -489,7 +490,8 @@ void ReadTP_3D()
                                  &dum, &dum, &dum,
                                  &dum, &dum, &dum,
                                  &dum, &dum, &dum,
-                                 &dum));
+                                 &dum))
+                                 ;
             }
         }
     }
@@ -505,7 +507,7 @@ void ReadTP_3D()
            %le\n",
            atmos.lat[0],
            atmos.lon[0],
-           num,
+           1,
            atmos.alt[0],
            atmos.P_3d[0][0][0],
            atmos.T_3d[0][0][0],

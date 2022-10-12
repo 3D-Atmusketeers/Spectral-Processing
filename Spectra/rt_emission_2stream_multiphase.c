@@ -652,7 +652,7 @@ int RT_Emit_3D(double PHASE)
     }
 
     /* allocate memory for aero taus and kappas if clouds on */
-    if(CLOUDS==1){
+    if(CLOUDS == 1 || HAZES == 1){
 
         /* MgSiO3 */
         aero_kappa_pre_qext_1 = malloc(NLAT*sizeof(double));
@@ -976,21 +976,22 @@ int RT_Emit_3D(double PHASE)
 
     /* calculate new aerosol taus and kappas, corrected for wavelength (if clouds on) */
 
-    if(CLOUDS==1){
+
+    if(CLOUDS == 1 || HAZES == 1){
         for(l=0; l<NLAT; l++){
             for(m=0; m<NLON; m++){
                 for(j=0; j<NTAU; j++){
                     /* scattering efficiency correction from 5um to 2.3um
                      (PI0, G0, QE calculated from Mie Scattering code of Mischenko, used in Roman Malsky 2022) */
-                    aero_tau_pre_qext_1[l][m][j] = atmos.aero_tau_pre_qext_1[l][m][j];
-                    aero_tau_pre_qext_2[l][m][j] = atmos.aero_tau_pre_qext_2[l][m][j];
-                    aero_tau_pre_qext_3[l][m][j] = atmos.aero_tau_pre_qext_3[l][m][j];
-                    aero_tau_pre_qext_4[l][m][j] = atmos.aero_tau_pre_qext_4[l][m][j];
-                    aero_tau_pre_qext_5[l][m][j] = atmos.aero_tau_pre_qext_5[l][m][j];
-                    aero_tau_pre_qext_6[l][m][j] = atmos.aero_tau_pre_qext_6[l][m][j];
-                    aero_tau_pre_qext_7[l][m][j] = atmos.aero_tau_pre_qext_7[l][m][j];
-                    aero_tau_pre_qext_8[l][m][j] = atmos.aero_tau_pre_qext_8[l][m][j];
-                    aero_tau_pre_qext_9[l][m][j] = atmos.aero_tau_pre_qext_9[l][m][j];
+                    aero_tau_pre_qext_1[l][m][j]  = atmos.aero_tau_pre_qext_1[l][m][j];
+                    aero_tau_pre_qext_2[l][m][j]  = atmos.aero_tau_pre_qext_2[l][m][j];
+                    aero_tau_pre_qext_3[l][m][j]  = atmos.aero_tau_pre_qext_3[l][m][j];
+                    aero_tau_pre_qext_4[l][m][j]  = atmos.aero_tau_pre_qext_4[l][m][j];
+                    aero_tau_pre_qext_5[l][m][j]  = atmos.aero_tau_pre_qext_5[l][m][j];
+                    aero_tau_pre_qext_6[l][m][j]  = atmos.aero_tau_pre_qext_6[l][m][j];
+                    aero_tau_pre_qext_7[l][m][j]  = atmos.aero_tau_pre_qext_7[l][m][j];
+                    aero_tau_pre_qext_8[l][m][j]  = atmos.aero_tau_pre_qext_8[l][m][j];
+                    aero_tau_pre_qext_9[l][m][j]  = atmos.aero_tau_pre_qext_9[l][m][j];
                     aero_tau_pre_qext_10[l][m][j] = atmos.aero_tau_pre_qext_10[l][m][j];
                     aero_tau_pre_qext_11[l][m][j] = atmos.aero_tau_pre_qext_11[l][m][j];
                     aero_tau_pre_qext_12[l][m][j] = atmos.aero_tau_pre_qext_12[l][m][j];
@@ -1001,39 +1002,43 @@ int RT_Emit_3D(double PHASE)
         }
         for(l=0; l<NLAT; l++){
             for(m=0; m<NLON; m++){
-                for(j=0; j<NTAU; j++){
-
+                for(j=0; j<NTAU; j++)
+                {
                     if (ds[j] > 1e-50)
                     {
-                        aero_kappa_pre_qext_1[l][m][j] = aero_tau_pre_qext_1[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_2[l][m][j] = aero_tau_pre_qext_2[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_3[l][m][j] = aero_tau_pre_qext_3[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_4[l][m][j] = aero_tau_pre_qext_4[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_5[l][m][j] = aero_tau_pre_qext_5[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_6[l][m][j] = aero_tau_pre_qext_6[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_7[l][m][j] = aero_tau_pre_qext_7[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_8[l][m][j] = aero_tau_pre_qext_8[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_9[l][m][j] = aero_tau_pre_qext_9[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_10[l][m][j] = aero_tau_pre_qext_10[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_11[l][m][j] = aero_tau_pre_qext_11[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_12[l][m][j] = aero_tau_pre_qext_12[l][m][j] / ds[j];
-                        aero_kappa_pre_qext_13[l][m][j] = aero_tau_pre_qext_13[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_1[l][m][j]   = aero_tau_pre_qext_1[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_2[l][m][j]   = aero_tau_pre_qext_2[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_3[l][m][j]   = aero_tau_pre_qext_3[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_4[l][m][j]   = aero_tau_pre_qext_4[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_5[l][m][j]   = aero_tau_pre_qext_5[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_6[l][m][j]   = aero_tau_pre_qext_6[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_7[l][m][j]   = aero_tau_pre_qext_7[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_8[l][m][j]   = aero_tau_pre_qext_8[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_9[l][m][j]   = aero_tau_pre_qext_9[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_10[l][m][j]  = aero_tau_pre_qext_10[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_11[l][m][j]  = aero_tau_pre_qext_11[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_12[l][m][j]  = aero_tau_pre_qext_12[l][m][j] / ds[j];
+                        aero_kappa_pre_qext_13[l][m][j]  = aero_tau_pre_qext_13[l][m][j] / ds[j];
+                        aero_kappa_pre_tau_haze[l][m][j] = aero_tau_haze[l][m][j] / ds[j];
+
+                        printf("%le %le\n", aero_kappa_pre_tau_haze[l][m][j], aero_tau_haze[l][m][j]);
                     }
                     else
                     {
-                        aero_kappa_pre_qext_1[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_2[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_3[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_4[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_5[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_6[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_7[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_8[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_9[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_10[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_11[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_12[l][m][j] = 0.0;
-                        aero_kappa_pre_qext_13[l][m][j] = 0.0;
+                        aero_kappa_pre_qext_1[l][m][j] = 0;
+                        aero_kappa_pre_qext_2[l][m][j] = 0;
+                        aero_kappa_pre_qext_3[l][m][j] = 0;
+                        aero_kappa_pre_qext_4[l][m][j] = 0;
+                        aero_kappa_pre_qext_5[l][m][j] = 0;
+                        aero_kappa_pre_qext_6[l][m][j] = 0;
+                        aero_kappa_pre_qext_7[l][m][j] = 0;
+                        aero_kappa_pre_qext_8[l][m][j] = 0;
+                        aero_kappa_pre_qext_9[l][m][j] = 0;
+                        aero_kappa_pre_qext_10[l][m][j] = 0;
+                        aero_kappa_pre_qext_11[l][m][j] = 0;
+                        aero_kappa_pre_qext_12[l][m][j] = 0;
+                        aero_kappa_pre_qext_13[l][m][j] = 0;
+                        aero_kappa_pre_tau_haze[l][m][j] = 0;
                     }
                 }
             }
@@ -1166,12 +1171,16 @@ int RT_Emit_3D(double PHASE)
     }
     printf("solid %f\n", solid);
 
+
+
     for(i=0; i<NLAMBDA; i++)
     {
+
         // Get the points on the wavelength grids
         wavelength_microns = atmos.lambda[i] * 1e6;
         Locate(500, wavelength_array_for_cloud_scattering_data_in_microns, wavelength_microns, &wavelength_index_clouds);
         Locate(500, wavelength_array_for_haze_scattering_data_in_microns, wavelength_microns, &wavelength_index_hazes);
+
 
         for(l=0; l<NLAT; l++)
         {
@@ -1183,7 +1192,6 @@ int RT_Emit_3D(double PHASE)
                 }
             }
         }
-
         /*Optical depth*/
         for(l=0; l<NLAT; l++)
         {
@@ -1338,10 +1346,9 @@ int RT_Emit_3D(double PHASE)
                         kappa_nu_array[l][m][j] = kappa_nu;
                         dtau_em[l][m][j] = kappa_nu * dl[l][m][j];
                         pressure_array[l][m][j] = pressure;
-
                         if (pressure > 1e-50)
                         {
-                            if(CLOUDS == 1 || HAZES)
+                            if(CLOUDS == 1 || HAZES == 1)
                             {
                                 if (j == 0)
                                 {
@@ -1368,7 +1375,7 @@ int RT_Emit_3D(double PHASE)
                                 aero_kappa_pre_qext_interp_11 = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_11[o][c][j], aero_kappa_pre_qext_11[o][c+1][j], aero_kappa_pre_qext_11[o+1][c][j], aero_kappa_pre_qext_11[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
                                 aero_kappa_pre_qext_interp_12 = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_12[o][c][j], aero_kappa_pre_qext_12[o][c+1][j], aero_kappa_pre_qext_12[o+1][c][j], aero_kappa_pre_qext_12[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
                                 aero_kappa_pre_qext_interp_13  = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_qext_13[o][c][j], aero_kappa_pre_qext_13[o][c+1][j], aero_kappa_pre_qext_13[o+1][c][j], aero_kappa_pre_qext_13[o+1][c+1][j], phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
-                                aero_kappa_pre_tau_haze_interp = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_tau_haze[o][c][j],aero_kappa_pre_tau_haze[o][c+1][j],    aero_kappa_pre_tau_haze[o+1][c][j],    aero_kappa_pre_tau_haze[o+1][c+1][j],    phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
+                                aero_kappa_pre_tau_haze_interp = lint2D(atmos.lon[c], atmos.lon[c+1], atmos.lat[o], atmos.lat[o+1], aero_kappa_pre_tau_haze[o][c][j],aero_kappa_pre_tau_haze[o][c+1][j],aero_kappa_pre_tau_haze[o+1][c][j],    aero_kappa_pre_tau_haze[o+1][c+1][j],    phi_lon_solid[l][m][j]-PHASE, theta_lat_solid[l][m][j]);
 
                                 aero_kappa_1    = aero_kappa_pre_qext_interp_1   * KCl_wav_qext[pressure_index_clouds][wavelength_index_clouds];
                                 aero_kappa_2    = aero_kappa_pre_qext_interp_2   * ZnS_wav_qext[pressure_index_clouds][wavelength_index_clouds];
@@ -1385,6 +1392,7 @@ int RT_Emit_3D(double PHASE)
                                 aero_kappa_13   = aero_kappa_pre_qext_interp_13  * Al2O3_wav_qext[pressure_index_clouds][wavelength_index_clouds];
                                 aero_kappa_haze = aero_kappa_pre_tau_haze_interp * haze_wav_tau[pressure_index_hazes][wavelength_index_hazes] * delta_pressure_bar;
 
+                                //printf("%le %0.4e %0.4e %0.4e %0.4e %0.4e\n", atmos.lambda[i], aero_kappa_pre_tau_haze_interp, haze_wav_tau[pressure_index_hazes][wavelength_index_hazes], delta_pressure_bar, aero_kappa_haze, kappa_nu);
 
                                 // So all the cloud wavelength values are not wavelength dependant in the output files
                                 // This takes the optical depth and adds the wavelength and particle size dependant scattering
@@ -1419,7 +1427,6 @@ int RT_Emit_3D(double PHASE)
                                     weight_12 = aero_kappa_12 * temp_value;
                                     weight_13 = aero_kappa_13 * temp_value;
                                     weight_haze = aero_kappa_haze * temp_value;
-
 
                                     pi0_tot[l][m][j] =  (weight_1    * KCl_wav_pi0[pressure_index_clouds][wavelength_index_clouds]     + \
                                                          weight_2    * ZnS_wav_pi0[pressure_index_clouds][wavelength_index_clouds]     + \

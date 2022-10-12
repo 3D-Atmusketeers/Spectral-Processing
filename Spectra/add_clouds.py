@@ -427,11 +427,11 @@ def add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOL
 
     planet_file_with_clouds = path + planet_name + '_with_clouds.txt'
     np.savetxt(planet_file_with_clouds, df.values, fmt=' '.join(['%5.4f']*2 + ['%3d']*1 + ['%9.4E']*6 + ['%9.4E']*42 + ['\t']))
-    """
+
     print ("Adding Clouds, with scattering params, this is just for the graphing stuff to have a copy")
     if CLOUDS == 1:
         # This is 2.168 microns
-        wav_loc = 23
+        wav_loc = 295
 
 
         max_cloud_level1 = 0
@@ -662,7 +662,7 @@ def add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOL
             layer_index   = np.abs(input_pressure_array_cgs - df['pressure(bars)'][i]*1e6).argmin()
 
             # This is 2.168 microns
-            wav_loc = 23
+            wav_loc = 295
             haze_layer_index = np.abs(haze_pressure_array_pascals - df_copy['pressure(bars)'][i]*1e6).argmin() # Both of these are in PA
 
             df_copy['tau_haze'][i] = df_copy['pressure(bars)'][layer_index] * QE_OPPR[13][haze_layer_index][wav_loc]
@@ -673,5 +673,5 @@ def add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOUDS, MOL
     
     planet_file_with_clouds = path + planet_name + '_with_clouds_and_wavelength_dependence.txt'
     np.savetxt(planet_file_with_clouds, df_copy.values, fmt=' '.join(['%5.4f']*2 + ['%3d']*1 + ['%9.4E']*6 + ['%9.4E']*42 + ['\t']))
-    """
+
     return None

@@ -6,7 +6,7 @@ from scipy.signal import savgol_filter
 ### ----- INPUTS AND OUTPUTS ----- ###
 
 
-def regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, NTAU, NLON_new, NTAU_new):
+def regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, NTAU, NLON_new, NTAU_new, HAZES):
     old_file = path + planet_name + '_with_clouds.txt'
     new_file = '../Planets/' + planet_name + '_with_clouds.txt'
 
@@ -437,7 +437,7 @@ def regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, NTAU, NLON
 
     # interpolate optical depths onto new grid (logarithmic)
 
-    if CLOUDS == 0:
+    if (CLOUDS == 0) and (HAZES == False):
         data_new = LInterp_1d(data, data_new, z_grid, 9) 
         data_new = LInterp_1d(data, data_new, z_grid, 10)
         data_new = LInterp_1d(data, data_new, z_grid, 11)

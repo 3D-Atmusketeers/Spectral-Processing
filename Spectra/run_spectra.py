@@ -50,7 +50,7 @@ opacity_files = 'high_resolution'
 
 
 # Are there photochemical hazes?
-HAZE_TYPE = 'None'
+HAZE_TYPE = 'soot'
 # HAZE_TYPE = 'soot' # 'soot-2xpi0' 'tholin', 'sulfur'
 
 if (HAZE_TYPE == 'soot' or HAZE_TYPE == 'soot-2xpi0' or HAZE_TYPE == 'tholin' or HAZE_TYPE == 'sulfur'):
@@ -58,14 +58,12 @@ if (HAZE_TYPE == 'soot' or HAZE_TYPE == 'soot-2xpi0' or HAZE_TYPE == 'tholin' or
 else:
     HAZES = False
 
-HAZES = False
-
 # HD209-Table1-No-Clouds-Sponge
 # HD209-Table1-Ya-Clouds-Thin-Nuc-High-TSPD
 
 # These are the planet files that you need to run the code
 # They should be pretty big files, and don't include the .txt with the names here
-planet_name = 'HD189-PICKET'
+planet_name = 'HD189-PICKET-NUC-CLOUDS'
 runname     = planet_name + '/Planet_Run'
 path        = '../GCM-OUTPUT/'
 
@@ -87,9 +85,9 @@ P_ROT      = ((float(re.findall(r"[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?", lin
 oom        = 7
 MTLX       = 0.1
 #MOLEF      = [1.23e-7,4.06e-8,9.35e-7,3.11e-7,4.4e-7, 3.26e-5,1.745e-5,9.56e-9,1.61e-6,2.94e-5,1.99e-6,7.83e-8,1.385e-6]
-#MOLEF      = [1.23e-7,0.0,0.0,0.0,4.4e-7,3.26e-5,1.745e-5,9.56e-9,0.0,0.0,1.99e-6,7.83e-8,1.385e-6]
-MOLEF      = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-aerosol_layers = 0
+MOLEF      = [1.23e-7,0.0,0.0,0.0,4.4e-7,3.26e-5,1.745e-5,9.56e-9,0.0,0.0,1.99e-6,7.83e-8,1.385e-6]
+#MOLEF      = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+aerosol_layers = 50
 
 print ("Gravity =  ",     grav)
 print ("Number of OOM = ", oom)
@@ -261,7 +259,7 @@ output_paths = []
 inclination_strs = []
 phase_strs = []
 
-"""
+
 # Convert the fort files to the correct format
 if USE_FORT_FILES == True:
     convert_fort_files.convert_to_correct_format(runname, planet_name, INITIAL_NTAU, surfp, oom, tgr, grav, gasconst)
@@ -273,7 +271,7 @@ add_clouds.add_clouds_to_gcm_output(path, runname, planet_name, grav, MTLX, CLOU
                                     aerosol_layers, INITIAL_NTAU, gasconst, HAZE_TYPE, HAZES)
 
 # Regrid the file to constant altitude and the correct number of layers
-altitude_regridding.regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, INITIAL_NTAU, NLON, NTAU)
+altitude_regridding.regrid_gcm_to_constant_alt(path, CLOUDS, planet_name, NLAT, NLON, INITIAL_NTAU, NLON, NTAU, HAZES)
 print ("Regridded the planet to constant altitude")
 
 # If you already have the Final planet file creates you can commend out run_grid and double planet file
@@ -296,3 +294,4 @@ for G0_VAL in G0_VALS:
     for W0_VAL in W0_VALS:
         for doppler_val in dopplers:
             run_exo(input_paths, inclination_strs, phase_strs, doppler_val)
+"""
