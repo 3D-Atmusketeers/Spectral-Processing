@@ -3,7 +3,7 @@ GCM-OUTPUT/*
 Planets/*
 Spectra/OUT/*
 Spectra/DATA/*
-Spectra/SCATTERING_DATA/*
+#Spectra/SCATTERING_DATA/*
 
 
 # Byte-compiled / optimized / DLL files

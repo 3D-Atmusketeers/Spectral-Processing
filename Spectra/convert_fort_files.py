@@ -111,8 +111,12 @@ def convert_to_correct_format(runname, planet_name,INITIAL_NTAU, surfp, oom, tgr
     levs=INITIAL_NTAU
 
 
-    #data_26,nlon,nlat,nlev,nparam,z=readfortfiles(path,runname,'fort.2600','fort.5000',levs,gasconst,oom,grav,tgr)
-    data_26,nlon,nlat,nlev,nparam,z=readfortfiles(path,runname,'fort.26','fort.50',levs,gasconst,oom,grav,tgr)
+    if os.path.isfile(path+runname+'/fort.2600'):
+        data_26,nlon,nlat,nlev,nparam,z=readfortfiles(path,runname,'fort.2600','fort.5000',levs,gasconst,oom,grav,tgr)
+        print ("Using the fort.2600 and fort.5000 files")
+    else:
+        data_26,nlon,nlat,nlev,nparam,z=readfortfiles(path,runname,'fort.26','fort.50',levs,gasconst,oom,grav,tgr)
+        print ("Using the fort.26 and fort.50 files")
 
 
     # Reshape the array to be 2D
